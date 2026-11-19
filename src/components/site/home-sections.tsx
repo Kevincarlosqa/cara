@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useInView, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { AnimatePresence, motion, useInView, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Check, Clock, MapPin, Plus } from "lucide-react";
 import { LogoMark, Sparkle } from "@/components/brand/logo";
@@ -246,25 +246,25 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
       <div className="mesh opacity-40" aria-hidden>
         <i style={{ width: 600, height: 600, right: "-10%", top: "10%", color: "#6b4f39" }} />
       </div>
-      <div className={cn("relative mx-auto max-w-[1400px] px-5 py-24 md:px-10", !reduced && "lg:sticky lg:top-0 lg:flex lg:h-dvh lg:items-center lg:py-0")}>
-        <div className="grid w-full gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
+      <div className={cn("relative mx-auto max-w-[1400px] px-5 py-24 md:px-10", !reduced && "lg:sticky lg:top-0 lg:flex lg:h-dvh lg:items-center lg:pt-24 lg:pb-8")}>
+        <div className="grid w-full gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:gap-20">
           <div className="flex flex-col justify-center">
             <Eyebrow className="text-peach">El ritual Signature · 90 minutos</Eyebrow>
-            <motion.h2 id="ritual" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.95] font-light">
+            <motion.h2 id="ritual" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.4rem,4vw,4.2rem)] leading-[0.95] font-light">
               Seis pasos para <em className="text-gradient-light pr-2">volver a ti</em>
             </motion.h2>
             {/* Escritorio: lista que se ilumina según el paso */}
-            <div className="relative mt-10 hidden pl-8 lg:block">
+            <div className="relative mt-8 hidden pl-8 lg:block">
               <span className="absolute top-0 bottom-0 left-0 w-px bg-paper/15" aria-hidden />
               <motion.span style={{ scaleY: reduced ? 1 : bar }} className="absolute top-0 bottom-0 left-0 w-px origin-top bg-linear-to-b from-gold to-peach" aria-hidden />
               <ol className="space-y-1">
                 {HEADSPA_STEPS.map((s, i) => (
                   <li key={s.title} className="relative">
-                    <span className={cn("absolute top-[1.1rem] -left-[2.32rem] h-2.5 w-2.5 rounded-full border transition-all duration-500", i <= step ? "border-gold bg-gold" : "border-paper/30 bg-plum")} aria-hidden />
+                    <span className={cn("absolute top-[0.95rem] -left-[2.32rem] h-2.5 w-2.5 rounded-full border transition-all duration-500", i <= step ? "border-gold bg-gold" : "border-paper/30 bg-plum")} aria-hidden />
                     <div className={cn("transition-opacity duration-700", i === step ? "opacity-100" : "opacity-35")}>
-                      <p className="flex items-baseline gap-4 py-2">
+                      <p className="flex items-baseline gap-4 py-1.5">
                         <span className="font-brand text-xs tracking-[0.25em] text-peach">0{i + 1}</span>
-                        <span className="font-display text-3xl font-light xl:text-4xl">{s.title}</span>
+                        <span className="font-display text-2xl font-light xl:text-3xl">{s.title}</span>
                         <span className="ml-auto text-xs text-paper/50 tabular-nums">{s.min}</span>
                       </p>
                       <AnimatePresence initial={false}>
@@ -295,18 +295,26 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
               ))}
             </ol>
             {cta ? (
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-wrap gap-3 lg:hidden">
                 <TLink href="/reservar?servicio=svc_headspa-signature-cara" className="btn-shine inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-semibold text-ink transition-colors hover:bg-peach">Reservar Headspa Signature</TLink>
                 <TLink href="/headspa" className="inline-flex h-12 items-center rounded-full border border-paper/30 px-7 text-sm font-semibold transition-colors hover:bg-paper/10">Todo sobre el headspa</TLink>
               </div>
             ) : null}
           </div>
           <div className="relative hidden items-center justify-center lg:flex">
-            <div className="relative aspect-[3/4] h-[78vh] max-h-[760px]">
+            <div className="flex flex-col items-center gap-8">
+            <div className="relative aspect-[3/4] h-[min(62dvh,620px)]">
               <StepImage step={step} />
               <motion.p key={step} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-paper px-5 py-2 text-xs font-semibold whitespace-nowrap text-ink">
                 Paso {step + 1} de {HEADSPA_STEPS.length} · {HEADSPA_STEPS[step]!.title}
               </motion.p>
+            </div>
+            {cta ? (
+              <div className="flex flex-wrap justify-center gap-3">
+                <TLink href="/reservar?servicio=svc_headspa-signature-cara" className="btn-shine inline-flex h-12 items-center rounded-full bg-paper px-7 text-sm font-semibold text-ink transition-colors hover:bg-peach">Reservar Headspa Signature</TLink>
+                <TLink href="/headspa" className="inline-flex h-12 items-center rounded-full border border-paper/30 px-7 text-sm font-semibold transition-colors hover:bg-paper/10">Todo sobre el headspa</TLink>
+              </div>
+            ) : null}
             </div>
           </div>
         </div>
@@ -318,40 +326,101 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
 /* ─── Rituales destacados (carril horizontal) ─────────────────────────── */
 
 export function Rituals({ services }: { services: Service[] }) {
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0.02, 0.98], ["0vw", `-${Math.max(0, services.length * 27.5 - 88)}vw`]);
-  const photos = [PHOTOS.massageOil, PHOTOS.faceMassage, PHOTOS.backMassage, PHOTOS.hotStones, PHOTOS.spaStill, PHOTOS.hairWash, PHOTOS.citrus];
+  const lane = useRef<HTMLUListElement>(null);
+  const progress = useMotionValue(0);
+  const drag = useRef({ active: false, moved: false, x: 0, left: 0 });
+  // Cada tarjeta toma una foto de su categoría, sin repetir mientras haya opciones.
+  const pools: Partial<Record<Service["category"], Photo[]>> = { RITUAL: [PHOTOS.massageOil, PHOTOS.hotStones, PHOTOS.citrus], HEADSPA: [PHOTOS.hairWash, PHOTOS.faceMassage], FACIAL: [PHOTOS.facial, PHOTOS.facialMask, PHOTOS.mask], BODY: [PHOTOS.spaStill, PHOTOS.backMassage], MASSAGE: [PHOTOS.backMassage, PHOTOS.hotStones], COUPLE: [PHOTOS.hotStones] };
+  const used: Record<string, number> = {};
+  const photos = services.map((s) => {
+    const pool = pools[s.category] ?? [CATEGORY_PHOTOS[s.category]];
+    const n = (used[s.category] = (used[s.category] ?? -1) + 1);
+    return pool[n % pool.length]!;
+  });
+  const step = (dir: 1 | -1) => {
+    const el = lane.current;
+    const card = el?.querySelector("li");
+    if (!el || !card) return;
+    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + 20), behavior: "smooth" });
+  };
   return (
-    <section ref={ref} aria-labelledby="rituales" className={cn("relative bg-sand/70", !reduced && "lg:h-[280vh]")}>
-      <div className={cn("overflow-hidden py-24", !reduced && "lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-center lg:py-0")}>
-        <div className="mx-auto mb-10 flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-4 px-5 md:px-10">
-          <div>
-            <Eyebrow>Los favoritos de la casa</Eyebrow>
-            <motion.h2 id="rituales" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></motion.h2>
-          </div>
-          <TLink href="/servicios" className="inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Toda la carta <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
+    <section aria-labelledby="rituales" className="relative overflow-hidden bg-sand/70 py-24 md:py-32">
+      <div className="mx-auto mb-10 flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-6 px-5 md:px-10">
+        <div>
+          <Eyebrow>Los favoritos de la casa</Eyebrow>
+          <motion.h2 id="rituales" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></motion.h2>
         </div>
-        <motion.ul style={reduced ? undefined : { x }} className="scrollbar-none flex gap-5 overflow-x-auto px-5 overscroll-x-contain max-lg:!transform-none md:px-10 lg:w-max lg:overflow-visible" data-lenis-prevent-horizontal>
-          {services.map((s, i) => (
-            <Reveal as="li" key={s.id} delay={(i % 3) * 0.08} y={80} className="w-[78vw] shrink-0 sm:w-[46vw] lg:w-[26vw]">
-              <TLink href={`/reservar?servicio=${s.id}`} className="group block" data-cursor="Reservar">
-                <div className="relative h-[54vh] overflow-hidden rounded-t-[999px] rounded-b-[2rem] lg:h-[56vh]">
-                  <Image src={unsplash(photos[i % photos.length]!)} alt={photos[i % photos.length]!.alt} fill sizes="(min-width: 1024px) 27vw, 78vw" className="grade object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110" />
-                  <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide">{CATEGORY_LABELS[s.category]}</span>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => step(-1)} aria-label="Anterior" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4" aria-hidden /></button>
+          <button type="button" onClick={() => step(1)} aria-label="Siguiente" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4 rotate-180" aria-hidden /></button>
+          <TLink href="/servicios" className="ml-3 inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Toda la carta <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
+        </div>
+      </div>
+      <ul
+        ref={lane}
+        className="scrollbar-none flex cursor-grab snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto overscroll-x-contain px-5 pb-2 select-none active:cursor-grabbing md:scroll-px-10 md:px-10"
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          progress.set(el.scrollWidth > el.clientWidth ? el.scrollLeft / (el.scrollWidth - el.clientWidth) : 0);
+        }}
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse" || !lane.current) return;
+          drag.current = { active: true, moved: false, x: e.clientX, left: lane.current.scrollLeft };
+        }}
+        onPointerMove={(e) => {
+          const d = drag.current;
+          const el = lane.current;
+          if (!d.active || !el) return;
+          const dx = e.clientX - d.x;
+          if (!d.moved && Math.abs(dx) > 6) {
+            d.moved = true;
+            el.style.scrollSnapType = "none";
+          }
+          if (d.moved) el.scrollLeft = d.left - dx;
+        }}
+        onPointerUp={() => {
+          const el = lane.current;
+          drag.current.active = false;
+          if (el) el.style.scrollSnapType = "";
+        }}
+        onPointerLeave={() => {
+          const el = lane.current;
+          drag.current.active = false;
+          if (el) el.style.scrollSnapType = "";
+        }}
+        onClickCapture={(e) => {
+          // Si fue un arrastre, no se abre la tarjeta.
+          if (drag.current.moved) {
+            e.preventDefault();
+            e.stopPropagation();
+            drag.current.moved = false;
+          }
+        }}
+      >
+        {services.map((s, i) => (
+          <Reveal as="li" key={s.id} delay={Math.min(i, 3) * 0.08} y={60} className="w-[78vw] shrink-0 snap-start sm:w-[46vw] lg:w-[29vw] xl:w-[25vw]">
+            <TLink href={`/reservar?servicio=${s.id}`} className="group block" data-cursor="Reservar" draggable={false}>
+              <div className="relative h-[54vh] max-h-[560px] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
+                <Image src={unsplash(photos[i]!)} alt={photos[i]!.alt} fill draggable={false} sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 29vw, 78vw" className="grade object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-105" />
+                <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide">{CATEGORY_LABELS[s.category]}</span>
+              </div>
+              <div className="mt-5 flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-display text-3xl leading-tight font-light transition-colors group-hover:text-rose">{s.name}</h3>
+                  <p className="mt-1 line-clamp-2 max-w-xs text-sm text-muted">{s.description}</p>
                 </div>
-                <div className="mt-5 flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-display text-3xl leading-tight font-light transition-colors group-hover:text-rose">{s.name}</h3>
-                    <p className="mt-1 line-clamp-2 max-w-xs text-sm text-muted">{s.description}</p>
-                  </div>
-                  <p className="shrink-0 text-right text-sm font-semibold tabular-nums">{formatMoney(s.basePriceCents)}<span className="block text-xs font-normal text-muted">{hours(s.durationMin)}</span></p>
-                </div>
-              </TLink>
-            </Reveal>
-          ))}
-        </motion.ul>
+                <p className="shrink-0 text-right text-sm font-semibold tabular-nums">{formatMoney(s.basePriceCents)}<span className="block text-xs font-normal text-muted">{hours(s.durationMin)}</span></p>
+              </div>
+            </TLink>
+          </Reveal>
+        ))}
+        <li aria-hidden className="w-px shrink-0" />
+      </ul>
+      {/* Avance del carril */}
+      <div className="mx-auto mt-10 max-w-[1400px] px-5 md:px-10">
+        <div className="relative h-px w-full bg-ink/15">
+          <motion.span style={{ scaleX: progress }} className="absolute inset-0 origin-left bg-linear-to-r from-rose-deep via-gold to-rose" />
+        </div>
       </div>
     </section>
   );
@@ -698,7 +767,7 @@ export function Faq() {
     <section aria-labelledby="faq" className="mx-auto grid max-w-[1400px] gap-12 px-5 py-24 md:px-10 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Eyebrow>Preguntas frecuentes</Eyebrow>
-        <motion.h2 id="faq" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.92] font-light">Antes de <em className="text-gradient pr-2">tu visita</em></motion.h2>
+        <motion.h2 id="faq" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.4rem,4vw,4.2rem)] leading-[0.92] font-light">Antes de <em className="text-gradient pr-2">tu visita</em></motion.h2>
         <p className="mt-5 max-w-sm text-ink-soft">¿Te quedó alguna duda? Escríbenos por WhatsApp y te respondemos en minutos.</p>
       </div>
       <ul className="border-t border-ink/15">
