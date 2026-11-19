@@ -40,7 +40,7 @@ export function CatalogPage({ eyebrow, title, accent, intro, services, categorie
       </header>
 
       <div className="sticky top-20 z-30 mx-auto max-w-[1400px] px-3 md:top-24 md:px-6">
-        <div className="flex flex-wrap items-center gap-2 rounded-[2rem] border border-ink/8 bg-paper/85 p-2 backdrop-blur-xl shadow-[0_16px_40px_-24px_rgba(28,24,21,.5)]">
+        <div className="flex flex-wrap items-center gap-2 rounded-[2rem] border border-ink/8 bg-paper p-2 shadow-[0_16px_40px_-24px_rgba(28,24,21,.5)]">
           <div className="scrollbar-none flex min-w-0 flex-1 gap-1 overflow-x-auto overscroll-x-contain" role="tablist" aria-label="Categorías" data-lenis-prevent-horizontal>
             {(["ALL", ...categories] as const).map((c) => (
               <button key={c} role="tab" aria-selected={active === c} onClick={() => setActive(c)} data-cursor="" className={cn("relative shrink-0 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors", active === c ? "text-paper" : "text-ink-soft hover:text-ink")}>

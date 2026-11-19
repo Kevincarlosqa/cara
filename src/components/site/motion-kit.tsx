@@ -23,7 +23,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   const reduced = useReducedMotion();
   if (reduced) return <>{children}</>;
   return (
-    <ReactLenis root options={{ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true, anchors: { offset: -80 } }}>
+    <ReactLenis root options={{ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, anchors: { offset: -80 } }}>
       {children}
     </ReactLenis>
   );
@@ -94,13 +94,15 @@ export function FadeUp({ children, className, delay = 0 }: { children: ReactNode
 /** Marquee cuya velocidad y dirección responden al scroll. */
 export function VelocityMarquee({ children, baseVelocity = -2, className }: { children: ReactNode; baseVelocity?: number; className?: string }) {
   const reduced = useReducedMotion();
+  const box = useRef<HTMLDivElement>(null);
+  const visible = useInView(box, { margin: "100px 0px" });
   const x = useMotionValue(0);
   const { scrollY } = useScroll();
   const velocity = useSpring(useVelocity(scrollY), { damping: 50, stiffness: 400 });
   const factor = useTransform(velocity, [-2000, 0, 2000], [-5, 0, 5], { clamp: false });
   const dir = useRef(1);
   useAnimationFrame((_, delta) => {
-    if (reduced) return;
+    if (reduced || !visible) return;
     let move = dir.current * baseVelocity * (delta / 1000);
     const f = factor.get();
     if (f < 0) dir.current = -1;
@@ -114,8 +116,8 @@ export function VelocityMarquee({ children, baseVelocity = -2, className }: { ch
   });
   const translate = useTransform(x, (v) => `${v}%`);
   return (
-    <div className={cn("overflow-hidden whitespace-nowrap", className)}>
-      <motion.div className="flex w-max" style={{ x: translate }}>
+    <div ref={box} className={cn("overflow-hidden whitespace-nowrap", className)}>
+      <motion.div className="flex w-max will-change-transform" style={{ x: translate }}>
         <div className="flex shrink-0">{children}</div>
         <div className="flex shrink-0" aria-hidden>
           {children}
@@ -146,7 +148,7 @@ export function Counter({ to, suffix = "", decimals = 0, className }: { to: numb
   }, [inView, to, reduced, decimals]);
   return (
     <span ref={ref} className={className}>
-      {value.toLocaleString("es-PE", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+      {value.toLocaleString("es-ES", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}
     </span>
   );
@@ -270,23 +272,25 @@ export function ScrollProgress() {
   return <motion.div aria-hidden style={{ scaleX }} className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-linear-to-r from-rose-deep via-gold to-peach" />;
 }
 
+const CURSOR_TARGETS = "a, button, [role='button'], [data-cursor], label, summary";
+
 /**
- * Cursor propio en escritorio: un punto y un aro que lo sigue con retardo.
+ * Cursor propio en escritorio: un punto y un aro que lo sigue con inercia.
+ * No usa estado de React: mueve el DOM directamente en un único requestAnimationFrame
+ * que se detiene cuando el aro alcanza al puntero. El hover se detecta con pointerover
+ * (solo dispara al cambiar de elemento), así que no cuesta nada mientras se mueve el mouse.
  * El aro crece sobre enlaces y muestra una etiqueta si el elemento tiene data-cursor="Texto".
  */
 export function CustomCursor() {
   const reduced = useReducedMotion();
   const [enabled, setEnabled] = useState(false);
-  const [hover, setHover] = useState<string | null>(null);
-  const [down, setDown] = useState(false);
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const rx = useSpring(x, { stiffness: 260, damping: 26, mass: 0.5 });
-  const ry = useSpring(y, { stiffness: 260, damping: 26, mass: 0.5 });
+  const dot = useRef<HTMLDivElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
+  const label = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (reduced) return;
-    const fine = window.matchMedia("(pointer: fine)");
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
     const sync = () => setEnabled(fine.matches);
     sync();
     fine.addEventListener("change", sync);
@@ -294,50 +298,88 @@ export function CustomCursor() {
   }, [reduced]);
 
   useEffect(() => {
-    if (!enabled) return;
-    const move = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      const el = (e.target as Element | null)?.closest?.("a, button, [role='button'], [data-cursor], input, textarea, select, label");
-      setHover(el ? (el.getAttribute("data-cursor") ?? "") : null);
+    const d = dot.current;
+    const r = ring.current;
+    const l = label.current;
+    if (!enabled || !d || !r || !l) return;
+    let x = -100;
+    let y = -100;
+    let rx = x;
+    let ry = y;
+    let raf = 0;
+    let running = false;
+    const tick = () => {
+      rx += (x - rx) * 0.22;
+      ry += (y - ry) * 0.22;
+      r.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+      if (Math.abs(x - rx) + Math.abs(y - ry) > 0.2) raf = requestAnimationFrame(tick);
+      else running = false;
     };
-    const press = () => setDown(true);
-    const release = () => setDown(false);
+    const move = (e: PointerEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+      d.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      if (!running) {
+        running = true;
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const over = (e: PointerEvent) => {
+      const el = (e.target as Element | null)?.closest?.(CURSOR_TARGETS);
+      const text = el?.getAttribute("data-cursor") ?? "";
+      const state = !el ? "idle" : text ? "label" : "hover";
+      if (r.dataset.state !== state) r.dataset.state = state;
+      if (l.textContent !== text) l.textContent = text;
+    };
+    const down = () => (r.dataset.down = "1");
+    const up = () => delete r.dataset.down;
+    const leave = () => (r.dataset.hidden = d.dataset.hidden = "1");
+    const enter = () => (delete r.dataset.hidden, delete d.dataset.hidden);
     window.addEventListener("pointermove", move, { passive: true });
-    window.addEventListener("pointerdown", press);
-    window.addEventListener("pointerup", release);
+    document.addEventListener("pointerover", over, { passive: true });
+    window.addEventListener("pointerdown", down, { passive: true });
+    window.addEventListener("pointerup", up, { passive: true });
+    document.documentElement.addEventListener("pointerleave", leave);
+    document.documentElement.addEventListener("pointerenter", enter);
     document.documentElement.classList.add("has-cursor");
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerdown", press);
-      window.removeEventListener("pointerup", release);
+      document.removeEventListener("pointerover", over);
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointerup", up);
+      document.documentElement.removeEventListener("pointerleave", leave);
+      document.documentElement.removeEventListener("pointerenter", enter);
       document.documentElement.classList.remove("has-cursor");
     };
-  }, [enabled, x, y]);
+  }, [enabled]);
 
   if (!enabled) return null;
-  const label = hover && hover.length > 0 ? hover : null;
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[140]">
-      <motion.div style={{ x, y }} className="absolute top-0 left-0">
-        <span className={cn("block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink transition-opacity duration-300", hover !== null && "opacity-0")} />
-      </motion.div>
-      <motion.div style={{ x: rx, y: ry }} className="absolute top-0 left-0">
-        <motion.span
-          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-ink/40 text-[10px] font-semibold tracking-[0.2em] text-paper uppercase mix-blend-normal"
-          animate={{
-            width: label ? 92 : hover !== null ? 54 : 30,
-            height: label ? 92 : hover !== null ? 54 : 30,
-            backgroundColor: label ? "rgba(23,20,18,0.92)" : hover !== null ? "rgba(184,151,106,0.16)" : "rgba(0,0,0,0)",
-            borderColor: label ? "rgba(23,20,18,0)" : "rgba(23,20,18,0.35)",
-            scale: down ? 0.85 : 1,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        >
-          {label ? <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{label}</motion.span> : null}
-        </motion.span>
-      </motion.div>
+      <div ref={dot} className="cursor-dot" />
+      <div ref={ring} className="cursor-ring" data-state="idle">
+        <span className="cursor-ring-circle" />
+        <span ref={label} className="cursor-ring-label" />
+      </div>
     </div>
+  );
+}
+
+/** Aparece al entrar en pantalla: sube, se desvanece y (opcional) se descubre de abajo arriba. Solo transform y opacidad. */
+export function Reveal({ children, className, delay = 0, y = 60, scale = 1, as = "div" }: { children: ReactNode; className?: string; delay?: number; y?: number; scale?: number; as?: "div" | "li" }) {
+  const reduced = useReducedMotion();
+  const Tag = as === "li" ? motion.li : motion.div;
+  return (
+    <Tag
+      className={className}
+      initial={reduced ? false : { opacity: 0, y, scale }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+      transition={{ duration: 1.2, ease: EASE, delay }}
+    >
+      {children}
+    </Tag>
   );
 }
 

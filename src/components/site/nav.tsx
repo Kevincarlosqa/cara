@@ -48,7 +48,7 @@ export function Nav({ whatsappHref, instagramHref }: { whatsappHref: string; ins
           aria-label="Principal"
           className={cn(
             "mx-auto grid h-14 max-w-[1400px] grid-cols-[1fr_auto] items-center rounded-full border pr-2 pl-5 transition-all duration-700 md:h-16 lg:grid-cols-[1fr_auto_1fr] lg:pl-3",
-            scrolled || open ? "border-ink/8 bg-paper/80 shadow-[0_16px_50px_-28px_rgba(28,24,21,.45)] backdrop-blur-xl" : "border-transparent bg-transparent",
+            scrolled || open ? "border-ink/8 bg-paper/95 shadow-[0_16px_50px_-28px_rgba(28,24,21,.45)]" : "border-transparent bg-transparent",
           )}
         >
           <ul className="hidden items-center gap-0.5 text-[13px] font-medium lg:flex">

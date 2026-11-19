@@ -36,7 +36,7 @@ export function BlogIndex({ posts }: { posts: Post[] }) {
           <TLink href={`/blog/${first.slug}`} className="group grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-center" data-cursor="Leer">
             <div className="relative aspect-[16/11] overflow-hidden rounded-[2.5rem] bg-sand">
               <Image src={unsplash(first.cover)} alt={first.cover.alt} fill priority sizes="(min-width: 1024px) 58vw, 100vw" className="grade object-cover transition-transform duration-[1800ms] ease-out group-hover:scale-105" />
-              <span className="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-paper/90 px-4 py-1.5 text-xs font-semibold backdrop-blur"><Sparkle className="h-2.5 w-2.5 text-rose" /> Lo último</span>
+              <span className="absolute top-6 left-6 flex items-center gap-2 rounded-full bg-paper/90 px-4 py-1.5 text-xs font-semibold"><Sparkle className="h-2.5 w-2.5 text-rose" /> Lo último</span>
             </div>
             <div>
               <p className="eyebrow text-rose">{first.category}</p>

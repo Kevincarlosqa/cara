@@ -28,12 +28,15 @@ function FloatingChip({ children, className, delay }: { children: React.ReactNod
   return (
     <motion.span
       initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      animate={{ opacity: 1, y: [0, -8, 0], scale: 1 }}
-      transition={{ opacity: { delay, duration: 0.8 }, scale: { delay, duration: 0.8 }, y: { delay: delay + 0.8, duration: 5, repeat: Infinity, ease: "easeInOut" } }}
-      className={`absolute z-10 flex items-center gap-2 rounded-full border border-ink/5 bg-paper/90 px-4 py-2 text-xs font-semibold shadow-[0_18px_40px_-20px_rgba(23,20,18,.5)] backdrop-blur ${className}`}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay, duration: 0.9, ease: EASE }}
+      className={`absolute z-10 ${className}`}
     >
-      <Sparkle className="h-2.5 w-2.5 text-rose" />
-      {children}
+      {/* La flotación es CSS (compositor), no un bucle de JavaScript. */}
+      <span className="flex animate-float items-center gap-2 rounded-full border border-ink/5 bg-paper/95 px-4 py-2 text-xs font-semibold shadow-[0_18px_40px_-20px_rgba(23,20,18,.5)]" style={{ animationDelay: `${-delay * 2}s` }}>
+        <Sparkle className="h-2.5 w-2.5 text-rose" />
+        {children}
+      </span>
     </motion.span>
   );
 }

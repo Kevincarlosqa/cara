@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
-const SPRITE = 64;
+const SPRITE = 48;
 const FRAME_MS = 1000 / 30; // Deriva lenta: a 30 fps se ve igual y cuesta la mitad.
 
 interface Particle {
@@ -90,7 +90,7 @@ export function Particles({ colors, count = 50, glints = 0.3, opacity = 0.8, cla
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

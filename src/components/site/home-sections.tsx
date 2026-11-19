@@ -12,7 +12,7 @@ import type { LandingData } from "@/lib/landing";
 import { CARA_CATEGORIES, CATEGORY_LABELS } from "@/lib/labels";
 import { cn, formatMoney } from "@/lib/utils";
 import { INSTAGRAM_URL, InstagramIcon, waLink } from "./icons";
-import { Counter, FadeUp, RevealLines, ScrollFillText, Tilt, VelocityMarquee } from "./motion-kit";
+import { Counter, FadeUp, Reveal, RevealLines, ScrollFillText, Tilt, VelocityMarquee } from "./motion-kit";
 import { Particles } from "./particles";
 import { TLink } from "./transition";
 
@@ -67,14 +67,21 @@ export function Pillars({ counts }: { counts: Record<"HEADSPA" | "FACIAL" | "BOD
         </FadeUp>
       </div>
       <div className="group/p flex h-[150vh] min-h-[900px] flex-col gap-3 md:h-[78vh] md:min-h-[600px] md:flex-row">
-        {pillars.map((w) => (
-          <TLink
+        {pillars.map((w, i) => (
+          <motion.div
             key={w.key}
+            initial={{ opacity: 0, y: 120 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+            transition={{ duration: 1.3, ease: EASE, delay: i * 0.12 }}
+            className="relative min-h-0 flex-1 transition-[flex-grow] duration-[1100ms] ease-[cubic-bezier(.22,1,.36,1)] md:hover:grow-[1.9] md:has-[:focus-visible]:grow-[1.9]"
+          >
+          <TLink
             href={w.href}
             data-cursor="Ver"
-            className="group relative block min-h-0 flex-1 overflow-hidden rounded-[2.5rem] transition-[flex-grow] duration-1000 ease-[cubic-bezier(.22,1,.36,1)] md:hover:grow-[1.9] md:focus-visible:grow-[1.9]"
+            className="group absolute inset-0 block overflow-hidden rounded-[2.5rem]"
           >
-            <span className="absolute inset-0 transition-[scale] duration-[1600ms] ease-out group-hover:scale-110">
+            <span className="absolute inset-0 transition-transform duration-[1600ms] ease-[cubic-bezier(.22,1,.36,1)] will-change-transform group-hover:scale-110">
               <Image src={unsplash(w.photo)} alt={w.photo.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="grade object-cover" />
             </span>
             <span className="absolute inset-0 bg-linear-to-t from-plum/85 via-plum/20 to-transparent" />
@@ -90,9 +97,10 @@ export function Pillars({ counts }: { counts: Record<"HEADSPA" | "FACIAL" | "BOD
                 <span className="mt-4 block max-w-xs text-sm leading-relaxed opacity-0 transition-[opacity,translate] duration-700 max-md:opacity-90 md:translate-y-3 md:group-hover:translate-y-0 md:group-hover:opacity-90">{w.text}</span>
                 <span className="eyebrow mt-3 block text-peach">{counts[w.key]} tratamientos</span>
               </span>
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-paper/40 backdrop-blur-sm transition-all duration-700 group-hover:rotate-45 group-hover:bg-paper group-hover:text-ink"><ArrowUpRight className="h-5 w-5" aria-hidden /></span>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-paper/40 transition-all duration-700 group-hover:rotate-45 group-hover:bg-paper group-hover:text-ink"><ArrowUpRight className="h-5 w-5" aria-hidden /></span>
             </span>
           </TLink>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -121,11 +129,11 @@ export function Manifesto({ services }: { services: number }) {
             { node: <Counter to={services} />, l: "tratamientos en carta" },
             { node: <Counter to={90} suffix="′" />, l: "de headspa Signature" },
             { node: <Counter to={3} />, l: "pilares: cabeza, rostro y cuerpo" },
-          ].map((k) => (
-            <div key={k.l} className="flex flex-col-reverse">
+          ].map((k, i) => (
+            <Reveal key={k.l} delay={i * 0.1} y={40} className="flex flex-col-reverse">
               <dt className="mt-3 max-w-[12rem] text-sm text-paper/65">{k.l}</dt>
               <dd className="font-display text-6xl leading-none font-light md:text-7xl">{k.node}</dd>
-            </div>
+            </Reveal>
           ))}
         </dl>
       </div>
@@ -150,9 +158,9 @@ export function ServiceIndex({ services }: { services: Service[] }) {
       <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
         <div>
           <Eyebrow>La carta, de un vistazo</Eyebrow>
-          <h2 id="carta" className="font-display text-[clamp(2.8rem,6vw,6rem)] leading-[0.92] font-light">
+          <motion.h2 id="carta" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.8rem,6vw,6rem)] leading-[0.92] font-light">
             Todo lo que <em className="text-gradient pr-2">sabemos hacer</em>
-          </h2>
+          </motion.h2>
         </div>
         <TLink href="/servicios" className="group inline-flex items-center gap-2 text-sm font-semibold">
           <span className="relative">Ver la carta completa<span className="absolute inset-x-0 -bottom-1 h-px origin-left bg-ink transition-transform duration-500 group-hover:scale-x-0" /></span>
@@ -162,7 +170,7 @@ export function ServiceIndex({ services }: { services: Service[] }) {
       <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr]">
         <ul className="border-t border-ink/15">
           {rows.map((r, i) => (
-            <li key={r.category} className="border-b border-ink/15">
+            <Reveal as="li" key={r.category} delay={i * 0.07} y={36} className="border-b border-ink/15">
               <TLink
                 href={r.category === "HEADSPA" ? "/headspa" : "/servicios"}
                 onPointerEnter={() => setActive(r.category)}
@@ -172,13 +180,13 @@ export function ServiceIndex({ services }: { services: Service[] }) {
                 <span className="font-brand text-xs tracking-[0.25em] text-muted">0{i + 1}</span>
                 <span>
                   <span className={cn("block font-display text-4xl leading-tight font-light transition-[color,transform] duration-700 ease-[cubic-bezier(.22,1,.36,1)] md:text-5xl", active === r.category ? "translate-x-3 text-rose italic" : "")}>{CATEGORY_LABELS[r.category]}</span>
-                  <span className={cn("mt-1 block text-sm text-muted transition-opacity duration-500", active === r.category ? "opacity-100" : "opacity-0 max-lg:opacity-100")}>{r.names.join(" · ")}</span>
+                  <span className={cn("mt-1 block pl-0.5 text-sm text-muted transition-[opacity,translate] duration-700 ease-[cubic-bezier(.22,1,.36,1)]", active === r.category ? "translate-x-3 opacity-100" : "opacity-0 max-lg:opacity-100")}>{r.names.join(" · ")}</span>
                 </span>
                 <span className="shrink-0 text-right text-xs text-muted tabular-nums">
                   {r.count} · desde {formatMoney(r.from)}
                 </span>
               </TLink>
-            </li>
+            </Reveal>
           ))}
         </ul>
         {/* Vista previa: las fotos se apilan dentro de un óvalo y solo cambia su opacidad. */}
@@ -234,7 +242,7 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
   useMotionValueEvent(scrollYProgress, "change", (v) => setStep(Math.min(HEADSPA_STEPS.length - 1, Math.max(0, Math.floor(v * HEADSPA_STEPS.length)))));
 
   return (
-    <section ref={ref} aria-labelledby="ritual" className={cn("relative bg-plum text-paper", !reduced && "lg:h-[420vh]")}>
+    <section ref={ref} aria-labelledby="ritual" className={cn("relative bg-plum text-paper", !reduced && "lg:h-[360vh]")}>
       <div className="mesh opacity-40" aria-hidden>
         <i style={{ width: 600, height: 600, right: "-10%", top: "10%", color: "#6b4f39" }} />
       </div>
@@ -242,9 +250,9 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
         <div className="grid w-full gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
           <div className="flex flex-col justify-center">
             <Eyebrow className="text-peach">El ritual Signature · 90 minutos</Eyebrow>
-            <h2 id="ritual" className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.95] font-light">
+            <motion.h2 id="ritual" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.95] font-light">
               Seis pasos para <em className="text-gradient-light pr-2">volver a ti</em>
-            </h2>
+            </motion.h2>
             {/* Escritorio: lista que se ilumina según el paso */}
             <div className="relative mt-10 hidden pl-8 lg:block">
               <span className="absolute top-0 bottom-0 left-0 w-px bg-paper/15" aria-hidden />
@@ -316,22 +324,22 @@ export function Rituals({ services }: { services: Service[] }) {
   const x = useTransform(scrollYProgress, [0.02, 0.98], ["0vw", `-${Math.max(0, services.length * 27.5 - 88)}vw`]);
   const photos = [PHOTOS.massageOil, PHOTOS.faceMassage, PHOTOS.backMassage, PHOTOS.hotStones, PHOTOS.spaStill, PHOTOS.hairWash, PHOTOS.citrus];
   return (
-    <section ref={ref} aria-labelledby="rituales" className={cn("relative bg-sand/70", !reduced && "lg:h-[320vh]")}>
+    <section ref={ref} aria-labelledby="rituales" className={cn("relative bg-sand/70", !reduced && "lg:h-[280vh]")}>
       <div className={cn("overflow-hidden py-24", !reduced && "lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-center lg:py-0")}>
         <div className="mx-auto mb-10 flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-4 px-5 md:px-10">
           <div>
             <Eyebrow>Los favoritos de la casa</Eyebrow>
-            <h2 id="rituales" className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></h2>
+            <motion.h2 id="rituales" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></motion.h2>
           </div>
           <TLink href="/servicios" className="inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Toda la carta <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
         </div>
         <motion.ul style={reduced ? undefined : { x }} className="scrollbar-none flex gap-5 overflow-x-auto px-5 overscroll-x-contain max-lg:!transform-none md:px-10 lg:w-max lg:overflow-visible" data-lenis-prevent-horizontal>
           {services.map((s, i) => (
-            <li key={s.id} className="w-[78vw] shrink-0 sm:w-[46vw] lg:w-[26vw]">
+            <Reveal as="li" key={s.id} delay={(i % 3) * 0.08} y={80} className="w-[78vw] shrink-0 sm:w-[46vw] lg:w-[26vw]">
               <TLink href={`/reservar?servicio=${s.id}`} className="group block" data-cursor="Reservar">
                 <div className="relative h-[54vh] overflow-hidden rounded-t-[999px] rounded-b-[2rem] lg:h-[56vh]">
                   <Image src={unsplash(photos[i % photos.length]!)} alt={photos[i % photos.length]!.alt} fill sizes="(min-width: 1024px) 27vw, 78vw" className="grade object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110" />
-                  <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur">{CATEGORY_LABELS[s.category]}</span>
+                  <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide">{CATEGORY_LABELS[s.category]}</span>
                 </div>
                 <div className="mt-5 flex items-start justify-between gap-3">
                   <div>
@@ -341,7 +349,7 @@ export function Rituals({ services }: { services: Service[] }) {
                   <p className="shrink-0 text-right text-sm font-semibold tabular-nums">{formatMoney(s.basePriceCents)}<span className="block text-xs font-normal text-muted">{hours(s.durationMin)}</span></p>
                 </div>
               </TLink>
-            </li>
+            </Reveal>
           ))}
         </motion.ul>
       </div>
@@ -385,7 +393,7 @@ export function RitualFinder({ services }: { services: Service[] }) {
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-24 md:px-10 md:py-36 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
           <Eyebrow>Encuentra tu ritual</Eyebrow>
-          <h2 id="finder" className="font-display text-[clamp(2.6rem,5.4vw,5.4rem)] leading-[0.92] font-light">Dos preguntas y <em className="text-gradient pr-2">te recomendamos</em></h2>
+          <motion.h2 id="finder" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.4vw,5.4rem)] leading-[0.92] font-light">Dos preguntas y <em className="text-gradient pr-2">te recomendamos</em></motion.h2>
           <p className="mt-5 max-w-md text-ink-soft">Si no sabes por dónde empezar, cuéntanos qué buscas. Si aún tienes dudas, una asesora te orienta por WhatsApp.</p>
           <div className="mt-8 flex gap-2" aria-hidden>
             {[0, 1, 2].map((i) => (
@@ -453,9 +461,11 @@ function GalleryColumn({ photos, y, className }: { photos: Photo[]; y: MotionVal
   return (
     <motion.div style={{ y }} className={cn("flex flex-col gap-5 will-change-transform md:gap-7", className)}>
       {photos.map((p, i) => (
-        <div key={p.id} className={cn("group relative aspect-[3/4] overflow-hidden bg-sand", i % 2 ? "rounded-[2rem]" : "rounded-[50%]")}>
-          <Image src={unsplash(p)} alt={p.alt} fill sizes="(min-width: 768px) 30vw, 46vw" className="grade object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110" />
-        </div>
+        <Reveal key={p.id} delay={i * 0.1} y={80} scale={0.94}>
+          <div className={cn("group relative aspect-[3/4] overflow-hidden bg-sand", i % 2 ? "rounded-[2rem]" : "rounded-[50%]")}>
+            <Image src={unsplash(p)} alt={p.alt} fill sizes="(min-width: 768px) 30vw, 46vw" className="grade object-cover transition-transform duration-[1600ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-110" />
+          </div>
+        </Reveal>
       ))}
     </motion.div>
   );
@@ -472,7 +482,7 @@ export function Gallery() {
       <div className="relative mx-auto mb-14 flex max-w-[1400px] flex-wrap items-end justify-between gap-6 px-5 md:mb-20 md:px-10">
         <div>
           <Eyebrow>El santuario</Eyebrow>
-          <h2 id="galeria" className="font-display text-[clamp(2.8rem,7vw,6.8rem)] leading-[0.92] font-light">Un espacio para <em className="text-gradient pr-2">volver a ti</em></h2>
+          <motion.h2 id="galeria" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.8rem,7vw,6.8rem)] leading-[0.92] font-light">Un espacio para <em className="text-gradient pr-2">volver a ti</em></motion.h2>
         </div>
         <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" data-cursor="Seguir" className="group inline-flex items-center gap-3 rounded-full border border-ink/15 py-2 pr-5 pl-2 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-rose-deep via-gold to-peach text-paper"><InstagramIcon className="h-4 w-4" /></span>
@@ -517,7 +527,7 @@ export function GiftTeaser() {
     <section aria-labelledby="regalo" className="mx-auto grid max-w-[1400px] gap-14 px-5 py-24 md:px-10 md:py-36 lg:grid-cols-[1fr_1.05fr] lg:items-center">
       <div>
         <Eyebrow>Gift cards</Eyebrow>
-        <h2 id="regalo" className="font-display text-[clamp(2.6rem,5.4vw,5.4rem)] leading-[0.92] font-light">El regalo que <em className="text-gradient pr-2">se siente</em></h2>
+        <motion.h2 id="regalo" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.4vw,5.4rem)] leading-[0.92] font-light">El regalo que <em className="text-gradient pr-2">se siente</em></motion.h2>
         <p className="mt-5 max-w-md text-ink-soft">Por monto o por experiencia: un headspa, un facial o el ritual completo. Digital, con dedicatoria y lista en minutos.</p>
         <ul className="mt-7 space-y-2 text-sm text-ink-soft">
           {["Válida por 12 meses", "Se envía por WhatsApp o correo", "Se puede usar en cualquier tratamiento"].map((t) => (
@@ -526,7 +536,7 @@ export function GiftTeaser() {
         </ul>
         <TLink href="/store" className="mt-9 inline-flex h-12 items-center gap-1 rounded-full bg-ink px-7 text-sm font-semibold text-paper transition-colors hover:bg-rose-deep">Elegir una gift card <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
       </div>
-      <FadeUp><GiftCard /></FadeUp>
+      <Reveal y={80} scale={0.94}><GiftCard /></Reveal>
     </section>
   );
 }
@@ -556,7 +566,7 @@ export function ChatDemo({ whatsappHref }: { whatsappHref: string }) {
       <div className="mx-auto grid max-w-[1400px] gap-14 px-5 py-24 md:px-10 md:py-36 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <Eyebrow>Reserva por WhatsApp, a cualquier hora</Eyebrow>
-          <h2 id="chat" className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Tu cita en <em className="text-gradient pr-2">menos de un minuto</em></h2>
+          <motion.h2 id="chat" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Tu cita en <em className="text-gradient pr-2">menos de un minuto</em></motion.h2>
           <ul className="mt-8 max-w-md space-y-3">
             {["Te reconoce: sabe tu terapeuta favorita y tu último ritual.", "Consulta la agenda real; nunca inventa precios ni horarios.", "Embarazo, alergias o dudas de salud pasan directo a una especialista."].map((t) => (
               <li key={t} className="flex gap-3 text-ink-soft"><Check className="mt-0.5 h-5 w-5 shrink-0 text-rose" aria-hidden /> {t}</li>
@@ -564,7 +574,7 @@ export function ChatDemo({ whatsappHref }: { whatsappHref: string }) {
           </ul>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="mt-9 inline-flex h-12 items-center rounded-full bg-ink px-7 text-sm font-semibold text-paper transition-colors hover:bg-rose-deep">Escribir por WhatsApp</a>
         </div>
-        <div className="mx-auto w-full max-w-[330px]">
+        <Reveal y={90} scale={0.95} className="mx-auto w-full max-w-[330px]">
           <div className="overflow-hidden rounded-[2.8rem] border-[10px] border-ink bg-[#efe6dd] shadow-[0_50px_90px_-40px_rgba(23,20,18,.6)]" role="img" aria-label="Ejemplo de conversación con Alma, la asistente de reservas">
             <div className="flex items-center gap-3 bg-plum px-4 py-3 text-paper">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-paper text-ink"><LogoMark className="h-5 w-5" title="" /></span>
@@ -590,7 +600,7 @@ export function ChatDemo({ whatsappHref }: { whatsappHref: string }) {
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -614,7 +624,7 @@ export function Journey() {
     <section aria-labelledby="visita" className="bg-sand/70">
       <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
         <Eyebrow>Después de reservar</Eyebrow>
-        <h2 id="visita" className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Nos encargamos <em className="text-gradient pr-2">de lo demás</em></h2>
+        <motion.h2 id="visita" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Nos encargamos <em className="text-gradient pr-2">de lo demás</em></motion.h2>
         <div className="relative mt-16 pl-8 md:pt-10 md:pl-0">
           <span className="absolute top-2 bottom-2 left-[5px] w-px bg-ink/15 md:inset-x-0 md:top-[5px] md:bottom-auto md:h-px md:w-auto" aria-hidden />
           <motion.span style={{ scaleY: progress }} className="absolute top-2 bottom-2 left-[5px] w-px origin-top bg-rose md:hidden" aria-hidden />
@@ -645,7 +655,7 @@ export function PostCard({ post, index = 0, large = false }: { post: Post; index
       <TLink href={`/blog/${post.slug}`} className="group block" data-cursor="Leer">
         <div className={cn("relative overflow-hidden bg-sand", large ? "aspect-[4/3] rounded-[2.5rem]" : "aspect-[4/5] rounded-t-[999px] rounded-b-[2rem]")}>
           <Image src={unsplash(post.cover)} alt={post.cover.alt} fill sizes={large ? "(min-width: 1024px) 55vw, 100vw" : "(min-width: 1024px) 30vw, 90vw"} className="grade object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110" />
-          <span className="absolute top-5 left-5 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold backdrop-blur">{post.category}</span>
+          <span className="absolute top-5 left-5 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold">{post.category}</span>
         </div>
         <p className="mt-5 flex items-center gap-3 text-xs text-muted">
           <span>{formatPostDate(post.date)}</span>
@@ -665,7 +675,7 @@ export function JournalTeaser({ posts }: { posts: Post[] }) {
       <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
         <div>
           <Eyebrow>Journal</Eyebrow>
-          <h2 id="journal" className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Belleza <em className="text-gradient pr-2">sin prisa</em></h2>
+          <motion.h2 id="journal" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Belleza <em className="text-gradient pr-2">sin prisa</em></motion.h2>
         </div>
         <TLink href="/blog" className="inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Todos los artículos <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
       </div>
@@ -689,7 +699,7 @@ export function Faq() {
     <section aria-labelledby="faq" className="mx-auto grid max-w-[1400px] gap-12 px-5 py-24 md:px-10 md:py-32 lg:grid-cols-[0.8fr_1.2fr]">
       <div>
         <Eyebrow>Preguntas frecuentes</Eyebrow>
-        <h2 id="faq" className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.92] font-light">Antes de <em className="text-gradient pr-2">tu visita</em></h2>
+        <motion.h2 id="faq" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5vw,5rem)] leading-[0.92] font-light">Antes de <em className="text-gradient pr-2">tu visita</em></motion.h2>
         <p className="mt-5 max-w-sm text-ink-soft">¿Te quedó alguna duda? Escríbenos por WhatsApp y te respondemos en minutos.</p>
       </div>
       <ul className="border-t border-ink/15">
@@ -724,7 +734,7 @@ export function Visit({ branch }: { branch: LandingData["branches"][number] | un
   if (!branch) return null;
   return (
     <section aria-labelledby="visitanos" className="mx-auto max-w-[1400px] px-3 pb-6 md:px-6">
-      <div className="relative grid overflow-hidden rounded-[3rem] bg-plum text-paper lg:grid-cols-[1fr_1fr]">
+      <Reveal y={80} scale={0.97} className="relative grid overflow-hidden rounded-[3rem] bg-plum text-paper lg:grid-cols-[1fr_1fr]">
         <div className="relative min-h-[360px] lg:min-h-[560px]">
           <Image src={unsplash(PHOTOS.spaStill)} alt={PHOTOS.spaStill.alt} fill sizes="(min-width: 1024px) 50vw, 100vw" className="grade object-cover" />
           <span className="absolute inset-0 bg-linear-to-r from-transparent to-plum/40" aria-hidden />
@@ -747,7 +757,7 @@ export function Visit({ branch }: { branch: LandingData["branches"][number] | un
           </div>
           <TLink href="/contacto" className="mt-6 inline-flex items-center gap-1 text-sm text-paper/70 underline-offset-4 hover:text-paper hover:underline">Cómo llegar y contacto <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

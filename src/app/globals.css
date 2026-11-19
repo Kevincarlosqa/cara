@@ -47,6 +47,11 @@
   }
   --animate-spin-slow: spin 28s linear infinite;
   --animate-breathe: breathe 7s ease-in-out infinite;
+  --animate-float: float 9s ease-in-out infinite;
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -14px, 0); }
+  }
   @keyframes breathe {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.035); }
@@ -191,17 +196,12 @@ html.lenis, html.lenis body { height: auto; }
 /* Texto en oro líquido: un degradado bronce-champán que fluye despacio. */
 .text-gradient {
   background: linear-gradient(100deg, #6b4f39 0%, #a9825c 22%, #c29f74 38%, #8a6a4f 55%, #5b4a3e 75%, #a9825c 100%);
-  background-size: 220% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  animation: liquid-gold 9s ease-in-out infinite alternate;
 }
 .text-gradient-light {
   background: linear-gradient(100deg, #e9d8bf 0%, #fbf8f3 30%, #d9c2a3 55%, #b8976a 80%, #efe4cf 100%);
-  background-size: 220% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  animation: liquid-gold 9s ease-in-out infinite alternate;
 }
-@keyframes liquid-gold { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 
 /* Ondas de agua (headspa): anillos que se expanden y se desvanecen. */
 .ripples { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -238,11 +238,30 @@ html.lenis, html.lenis body { height: auto; }
 .prose-cara blockquote { margin: 2.5rem 0; padding: 0 0 0 1.5rem; border-left: 1px solid var(--color-rose); font-family: var(--font-display); font-style: italic; font-size: clamp(1.6rem, 2.8vw, 2.1rem); line-height: 1.25; color: var(--color-ink); }
 
 @media (prefers-reduced-motion: reduce) {
-  .mesh > i, .mirror-sheen::after, .text-gradient, .text-gradient-light { animation: none; }
+  .mesh > i, .mirror-sheen::after { animation: none; }
   .ripples { display: none; }
 }
 
-/* Cursor propio (solo escritorio): se oculta el del sistema salvo en campos de texto. */
+/* Cursor propio (solo escritorio): se oculta el del sistema salvo en campos de texto.
+   Todo se anima con transform y opacidad, en la capa del compositor. */
+.cursor-dot, .cursor-ring { position: absolute; top: 0; left: 0; will-change: transform; transform: translate3d(-100px, -100px, 0); }
+.cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 999px; background: var(--color-ink); transition: opacity .3s; }
+.cursor-ring { width: 0; height: 0; }
+.cursor-ring-circle {
+  position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 999px;
+  border: 1px solid rgb(23 20 18 / 0.35); background: rgb(23 20 18 / 0);
+  transform: scale(0.68); transition: transform .5s var(--ease-silk), background-color .4s, border-color .4s, opacity .3s;
+}
+.cursor-ring-label {
+  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%) scale(.6); opacity: 0; white-space: nowrap;
+  font: 600 10px/1 var(--font-brand); letter-spacing: .22em; text-transform: uppercase; color: var(--color-paper);
+  transition: opacity .3s, transform .5s var(--ease-silk);
+}
+.cursor-ring[data-state="hover"] .cursor-ring-circle { transform: scale(1.25); background: rgb(184 151 106 / 0.16); border-color: rgb(138 106 79 / 0.5); }
+.cursor-ring[data-state="label"] .cursor-ring-circle { transform: scale(2.1); background: rgb(23 20 18 / 0.92); border-color: transparent; }
+.cursor-ring[data-state="label"] .cursor-ring-label { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.cursor-ring[data-down] .cursor-ring-circle { transform: scale(0.5); }
+.cursor-ring[data-hidden] .cursor-ring-circle, .cursor-dot[data-hidden] { opacity: 0; }
 html.has-cursor, html.has-cursor a, html.has-cursor button, html.has-cursor [role="button"] { cursor: none; }
 html.has-cursor input, html.has-cursor textarea, html.has-cursor select { cursor: auto; }
 

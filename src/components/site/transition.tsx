@@ -44,7 +44,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       setLabel(LABELS[path] ?? "");
       setPhase("cover");
       window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => startTransition(() => router.push(href)), 620);
+      timer.current = window.setTimeout(() => startTransition(() => router.push(href)), 480);
     },
     [lenis, pathname, reduced, router],
   );
