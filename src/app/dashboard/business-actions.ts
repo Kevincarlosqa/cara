@@ -381,7 +381,7 @@ export async function startTotp() {
     if (current.totpEnabledAt) throw new PosError("Ya tienes la verificación en dos pasos activa.");
     const secret = generateSecret();
     await prisma.user.update({ where: { id: user.id }, data: { totpSecret: secret } });
-    const qr = await QRCode.toDataURL(otpauthUrl(secret, user.email), { margin: 1, width: 240, color: { dark: "#171412", light: "#fffbf1" } });
+    const qr = await QRCode.toDataURL(otpauthUrl(secret, user.email), { margin: 1, width: 240, color: { dark: "#171412", light: "#fbf8f3" } });
     return { secret, qr };
   });
 }

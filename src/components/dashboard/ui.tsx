@@ -70,19 +70,19 @@ export function Field({ label, htmlFor, hint, children, className }: { label: st
 
 const STATUS_STYLE: Record<BookingStatus, string> = {
   PENDING: "bg-butter text-[#6f4a06]",
-  CONFIRMED: "bg-[#d9f2ec] text-[#0b5f53]",
-  IN_PROGRESS: "bg-[#e7e0fb] text-[#452a9e]",
+  CONFIRMED: "bg-[#e3e8df] text-[#3f5e4a]",
+  IN_PROGRESS: "bg-[#e6e1d8] text-[#5b4a3e]",
   COMPLETED: "bg-sand text-ink-soft",
-  CANCELLED: "bg-[#fbdfe2] text-[#96202f]",
+  CANCELLED: "bg-[#f2e2db] text-[#8f2f2a]",
   NO_SHOW: "bg-blush text-rose-deep",
 };
 
 export const STATUS_BLOCK: Record<BookingStatus, string> = {
-  PENDING: "bg-butter border-[#e3bb5e] text-[#5e3d05]",
+  PENDING: "bg-butter border-[#cfae74] text-[#5e3d05]",
   CONFIRMED: "bg-blush border-rose/40 text-ink",
-  IN_PROGRESS: "bg-[#e7e0fb] border-violet/50 text-[#35207e]",
+  IN_PROGRESS: "bg-[#e6e1d8] border-violet/50 text-[#3a2c24]",
   COMPLETED: "bg-sand border-linen text-ink-soft",
-  CANCELLED: "bg-[#fbdfe2] border-[#e7a0a9] text-[#96202f] line-through",
+  CANCELLED: "bg-[#f2e2db] border-[#c9a08a] text-[#8f2f2a] line-through",
   NO_SHOW: "bg-[#ebe0d2] border-rose/40 text-rose-deep",
 };
 

@@ -4,9 +4,9 @@ import type { Insight } from "@/lib/insights";
 import { formatMoney } from "@/lib/utils";
 
 const TONE = {
-  critical: { Icon: CircleAlert, label: "Urgente", cls: "bg-[#ffd8df] text-[#8a1730]" },
+  critical: { Icon: CircleAlert, label: "Urgente", cls: "bg-[#efdcd2] text-[#8f2f2a]" },
   warning: { Icon: AlertTriangle, label: "Atención", cls: "bg-butter text-[#6f4a06]" },
-  opportunity: { Icon: TrendingUp, label: "Oportunidad", cls: "bg-[#c9efe7] text-[#0b5f53]" },
+  opportunity: { Icon: TrendingUp, label: "Oportunidad", cls: "bg-[#dfe5da] text-[#3f5e4a]" },
 };
 
 export function RadarList({ insights }: { insights: Insight[] }) {

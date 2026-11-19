@@ -13,7 +13,7 @@ import { addDaysKey, localDateKey, wallToUtc, weekdayOf } from "./time";
 
 const TZ = "America/Lima";
 const DAY = 86_400_000;
-const HISTORY_DAYS = 180;
+const HISTORY_DAYS = 120;
 
 function rng(seed: number) {
   let a = seed >>> 0;
@@ -254,7 +254,7 @@ export async function seedDatabase(prisma: PrismaClient, opts: { now?: Date; pas
   // Clientes (ficticios). El número es un marcador: los envíos reales están bloqueados en modo demo.
   const customers: Array<{ id: string; phone: string; name: string }> = [];
   const usedPhones = new Set<string>();
-  for (let i = 0; i < 1400; i++) {
+  for (let i = 0; i < 800; i++) {
     let phone: string;
     do phone = `+519${String(Math.floor(r() * 1e8)).padStart(8, "0")}`;
     while (usedPhones.has(phone));
@@ -289,7 +289,7 @@ export async function seedDatabase(prisma: PrismaClient, opts: { now?: Date; pas
   const items: Array<{ bookingId: string; serviceId: string; variantId: null; stylistId: string; position: number; startsAt: Date; endsAt: Date; busyUntil: Date; durationMin: number; priceCents: number }> = [];
   const usedCodes = new Set<string>();
   const noShows = new Map<string, number>();
-  const regulars = customers.slice(0, 460);
+  const regulars = customers.slice(0, 280);
   const flakyList = customers.filter((_, i) => i % 11 === 7);
   const flaky = new Set(flakyList.map((c) => c.id));
   const lastSeen = new Map<string, number>();
@@ -515,7 +515,7 @@ export async function seedDatabase(prisma: PrismaClient, opts: { now?: Date; pas
   // Reseñas
   const completed = bookings.filter((b) => b.status === "COMPLETED");
   await prisma.review.createMany({
-    data: Array.from({ length: 380 }, (_, i) => {
+    data: Array.from({ length: 220 }, (_, i) => {
       const b = pick(r, completed);
       const roll = r();
       const rating = roll < 0.74 ? 5 : roll < 0.92 ? 4 : roll < 0.97 ? 3 : roll < 0.99 ? 2 : 1;

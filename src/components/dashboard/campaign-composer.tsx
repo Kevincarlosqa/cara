@@ -95,7 +95,7 @@ export function CampaignComposer({ segments, initial, demo }: { segments: Segmen
         </Button>
         <AnimatePresence>
           {launched ? (
-            <motion.p role="status" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-2 flex items-center gap-1.5 rounded-xl bg-[#d9f2ec] px-3 py-2 text-xs font-semibold text-[#0b5f53]">
+            <motion.p role="status" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-2 flex items-center gap-1.5 rounded-xl bg-[#e3e8df] px-3 py-2 text-xs font-semibold text-[#3f5e4a]">
               <Sparkles className="h-3.5 w-3.5" aria-hidden /> {launched.simulated ? "Campaña simulada" : "Campaña enviada"}: {launched.audience.toLocaleString("es-PE")} destinatarios. Mira los resultados abajo.
             </motion.p>
           ) : null}
@@ -116,7 +116,7 @@ export function CampaignComposer({ segments, initial, demo }: { segments: Segmen
               <motion.div key={segment} initial={{ opacity: 0, y: 18, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} transition={{ type: "spring", stiffness: 300, damping: 26 }} className="rounded-2xl rounded-bl-md bg-white px-3 py-2 text-[13px] leading-snug shadow-sm">
                 <p className="whitespace-pre-wrap">{preview || "Tu mensaje aparecerá aquí."}</p>
                 <p className="mt-1 flex items-center justify-end gap-1 text-[10px] text-muted">
-                  ahora <CheckCheck className="h-3 w-3 text-[#34b7f1]" aria-hidden />
+                  ahora <CheckCheck className="h-3 w-3 text-[#8a6a4f]" aria-hidden />
                 </p>
               </motion.div>
             </AnimatePresence>

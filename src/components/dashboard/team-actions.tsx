@@ -21,7 +21,7 @@ export function AttendanceButton({ stylistId, branchId, open, done, checkInLabel
             setError(r.ok ? "" : r.error);
           })
         }
-        className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors disabled:opacity-50", open ? "bg-[#d9f2ec] text-[#0b5f53] hover:bg-[#c3e9e0]" : "border border-line hover:bg-sand")}
+        className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold transition-colors disabled:opacity-50", open ? "bg-[#e3e8df] text-[#3f5e4a] hover:bg-[#d6decf]" : "border border-line hover:bg-sand")}
       >
         {open ? <LogOut className="h-3 w-3" aria-hidden /> : <LogIn className="h-3 w-3" aria-hidden />}
         {open ? `En sede desde ${checkInLabel}` : "Marcar entrada"}

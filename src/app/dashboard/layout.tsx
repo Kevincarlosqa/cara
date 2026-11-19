@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
         <Shell />
       </Suspense>
       <main className="relative min-w-0 flex-1 overflow-x-clip px-4 py-6 md:px-8 md:py-8">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_85%_0%,rgba(251,223,233,.8),transparent),radial-gradient(40%_80%_at_40%_0%,rgba(205,185,243,.28),transparent)]" aria-hidden />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_85%_0%,rgba(233,216,191,.75),transparent),radial-gradient(40%_80%_at_40%_0%,rgba(216,210,198,.45),transparent)]" aria-hidden />
         <div className="relative">{children}</div>
       </main>
     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { ReactLenis } from "lenis/react";
 import {
   motion,
   useAnimationFrame,
@@ -17,17 +16,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-
-/** Scroll suave global. Se desactiva con prefers-reduced-motion. */
-export function SmoothScroll({ children }: { children: ReactNode }) {
-  const reduced = useReducedMotion();
-  if (reduced) return <>{children}</>;
-  return (
-    <ReactLenis root options={{ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, anchors: { offset: -80 } }}>
-      {children}
-    </ReactLenis>
-  );
-}
 
 /** Texto que se revela por líneas (cada línea sube desde una máscara). */
 export function RevealLines({ lines, className, delay = 0, as: Tag = "h2" }: { lines: ReactNode[]; className?: string; delay?: number; as?: "h1" | "h2" | "p" }) {
@@ -270,100 +258,6 @@ export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
   return <motion.div aria-hidden style={{ scaleX }} className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-linear-to-r from-rose-deep via-gold to-peach" />;
-}
-
-const CURSOR_TARGETS = "a, button, [role='button'], [data-cursor], label, summary";
-
-/**
- * Cursor propio en escritorio: un punto y un aro que lo sigue con inercia.
- * No usa estado de React: mueve el DOM directamente en un único requestAnimationFrame
- * que se detiene cuando el aro alcanza al puntero. El hover se detecta con pointerover
- * (solo dispara al cambiar de elemento), así que no cuesta nada mientras se mueve el mouse.
- * El aro crece sobre enlaces y muestra una etiqueta si el elemento tiene data-cursor="Texto".
- */
-export function CustomCursor() {
-  const reduced = useReducedMotion();
-  const [enabled, setEnabled] = useState(false);
-  const dot = useRef<HTMLDivElement>(null);
-  const ring = useRef<HTMLDivElement>(null);
-  const label = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (reduced) return;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const sync = () => setEnabled(fine.matches);
-    sync();
-    fine.addEventListener("change", sync);
-    return () => fine.removeEventListener("change", sync);
-  }, [reduced]);
-
-  useEffect(() => {
-    const d = dot.current;
-    const r = ring.current;
-    const l = label.current;
-    if (!enabled || !d || !r || !l) return;
-    let x = -100;
-    let y = -100;
-    let rx = x;
-    let ry = y;
-    let raf = 0;
-    let running = false;
-    const tick = () => {
-      rx += (x - rx) * 0.22;
-      ry += (y - ry) * 0.22;
-      r.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-      if (Math.abs(x - rx) + Math.abs(y - ry) > 0.2) raf = requestAnimationFrame(tick);
-      else running = false;
-    };
-    const move = (e: PointerEvent) => {
-      x = e.clientX;
-      y = e.clientY;
-      d.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      if (!running) {
-        running = true;
-        raf = requestAnimationFrame(tick);
-      }
-    };
-    const over = (e: PointerEvent) => {
-      const el = (e.target as Element | null)?.closest?.(CURSOR_TARGETS);
-      const text = el?.getAttribute("data-cursor") ?? "";
-      const state = !el ? "idle" : text ? "label" : "hover";
-      if (r.dataset.state !== state) r.dataset.state = state;
-      if (l.textContent !== text) l.textContent = text;
-    };
-    const down = () => (r.dataset.down = "1");
-    const up = () => delete r.dataset.down;
-    const leave = () => (r.dataset.hidden = d.dataset.hidden = "1");
-    const enter = () => (delete r.dataset.hidden, delete d.dataset.hidden);
-    window.addEventListener("pointermove", move, { passive: true });
-    document.addEventListener("pointerover", over, { passive: true });
-    window.addEventListener("pointerdown", down, { passive: true });
-    window.addEventListener("pointerup", up, { passive: true });
-    document.documentElement.addEventListener("pointerleave", leave);
-    document.documentElement.addEventListener("pointerenter", enter);
-    document.documentElement.classList.add("has-cursor");
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerover", over);
-      window.removeEventListener("pointerdown", down);
-      window.removeEventListener("pointerup", up);
-      document.documentElement.removeEventListener("pointerleave", leave);
-      document.documentElement.removeEventListener("pointerenter", enter);
-      document.documentElement.classList.remove("has-cursor");
-    };
-  }, [enabled]);
-
-  if (!enabled) return null;
-  return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-[140]">
-      <div ref={dot} className="cursor-dot" />
-      <div ref={ring} className="cursor-ring" data-state="idle">
-        <span className="cursor-ring-circle" />
-        <span ref={label} className="cursor-ring-label" />
-      </div>
-    </div>
-  );
 }
 
 /** Aparece al entrar en pantalla: sube, se desvanece y (opcional) se descubre de abajo arriba. Solo transform y opacidad. */

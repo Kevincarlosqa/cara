@@ -202,7 +202,7 @@ export function Inbox() {
                   <p className="truncate text-xs text-muted">{c.preview}</p>
                   <div className="mt-1 flex gap-1">
                     {c.branch ? <Badge>{c.branch}</Badge> : null}
-                    {c.status === "HUMAN" ? <Badge className="bg-[#e9e9e6] text-[#24603f]">Asesora</Badge> : null}
+                    {c.status === "HUMAN" ? <Badge className="bg-[#e9e9e6] text-[#3f5e4a]">Asesora</Badge> : null}
                     {c.status === "CLOSED" ? <Badge>Cerrada</Badge> : null}
                   </div>
                 </div>

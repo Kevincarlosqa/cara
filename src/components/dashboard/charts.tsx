@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
  * Coral y ocre quedan bajo 3:1 de contraste: por eso toda gráfica con varias series lleva leyenda y vista de tabla.
  * El color sigue a la entidad, nunca a su posición.
  */
-export const SERIES = { orchid: "#8a6a4f", violet: "#5b4a3e", coral: "#b98d68", teal: "#149a8b", ochre: "#d9a11f" };
-const MUTED = "#7d6577";
+export const SERIES = { orchid: "#8a6a4f", violet: "#5b4a3e", coral: "#b98d68", teal: "#6f8a72", ochre: "#c39a52" };
+const MUTED = "#72675d";
 const INK = "#171412";
 const GRID = "#f1e7e1";
 const SURFACE = "#fbf8f3";
-const QUIET = "#cdb8b9";
+const QUIET = "#c9b8a6";
 const ANIM = { isAnimationActive: true, animationDuration: 900, animationEasing: "ease-out" as const };
 
 export const money = (v: number) => `S/ ${Math.round(v).toLocaleString("es-PE")}`;
@@ -275,7 +275,7 @@ export function Funnel({ steps }: { steps: Array<{ step: string; value: number; 
   );
 }
 
-const ORCHID_RAMP = ["#fdeef4", "#f9d3e3", "#f0a9c8", "#de6fa2", "#8a6a4f", "#8d1c58"];
+const ORCHID_RAMP = ["#f5ece3", "#ecdccc", "#d9b99a", "#b0805e", "#8a6a4f", "#6b4f39"];
 const rampIndex = (ratio: number) => Math.min(ORCHID_RAMP.length - 1, Math.floor(ratio * ORCHID_RAMP.length));
 
 /** Retención por cohorte: secuencial en un solo tono, con el valor en cada celda. */

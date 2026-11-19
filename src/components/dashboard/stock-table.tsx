@@ -82,7 +82,7 @@ export function StockTable({ rows, branchId, initialLow }: { rows: Row[]; branch
                         <div className={cn("h-full rounded-full", r.qty === 0 ? "bg-danger" : low ? "bg-coral" : "bg-teal")} style={{ width: `${fill}%` }} />
                       </div>
                       <span className="w-6 text-right font-semibold tabular-nums">{r.qty}</span>
-                      {r.qty === 0 ? <Badge className="bg-[#fbdfe2] text-[#96202f]">Agotado</Badge> : low ? <Badge className="bg-butter text-[#6f4a06]">Bajo (mín. {r.minQty})</Badge> : null}
+                      {r.qty === 0 ? <Badge className="bg-[#f2e2db] text-[#8f2f2a]">Agotado</Badge> : low ? <Badge className="bg-butter text-[#6f4a06]">Bajo (mín. {r.minQty})</Badge> : null}
                     </div>
                   </td>
                   <td className="py-2.5 text-right tabular-nums">{r.sold30}</td>

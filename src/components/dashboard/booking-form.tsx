@@ -208,7 +208,7 @@ export function BookingForm({ catalog, defaultBranchId, preset, defaultDate, onC
             </div>
 
             {error ? (
-              <div role="alert" className="rounded-xl bg-[#f5e1e1] px-3 py-2 text-sm text-[#8a2c2c]">
+              <div role="alert" className="rounded-xl bg-[#f1e4dc] px-3 py-2 text-sm text-[#8a2c2c]">
                 {error}
                 {alternatives.length ? (
                   <div className="mt-2 flex flex-wrap gap-1.5">

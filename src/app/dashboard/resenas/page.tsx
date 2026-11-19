@@ -16,7 +16,7 @@ function Stars({ n, className }: { n: number; className?: string }) {
   return (
     <span className={cn("inline-flex gap-0.5", className)} role="img" aria-label={`${n} de 5 estrellas`}>
       {Array.from({ length: 5 }, (_, i) => (
-        <Star key={i} className={cn("h-3.5 w-3.5", i < n ? "fill-ochre text-ochre" : "text-linen")} style={i < n ? { fill: "#d9a11f", color: "#d9a11f" } : undefined} aria-hidden />
+        <Star key={i} className={cn("h-3.5 w-3.5", i < n ? "fill-ochre text-ochre" : "text-linen")} style={i < n ? { fill: "#c39a52", color: "#c39a52" } : undefined} aria-hidden />
       ))}
     </span>
   );

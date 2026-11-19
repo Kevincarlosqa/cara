@@ -9,7 +9,6 @@ import { PHOTOS, unsplash } from "@/content/images";
 import type { LandingData } from "@/lib/landing";
 import { formatMoney } from "@/lib/utils";
 import { FadeUp, Magnetic, RevealLines } from "./motion-kit";
-import { Particles } from "./particles";
 import { TLink } from "./transition";
 
 type Service = LandingData["services"][number];
@@ -53,7 +52,6 @@ export function HeadspaHero({ signature }: { signature?: Service }) {
         <i style={{ width: "42vw", height: "42vw", right: "-10vw", top: "-10vw", color: "#d9c2a3", opacity: 0.7 }} />
         <i style={{ width: "34vw", height: "34vw", left: "-10vw", bottom: "-12vw", color: "#d8d2c6", opacity: 0.8, animationDelay: "-9s" }} />
       </div>
-      <Particles colors={["#b8976a", "#d9c2a3", "#8a6a4f"]} count={30} glints={0.45} opacity={0.7} />
       <div className="relative mx-auto grid max-w-[1400px] gap-14 px-5 pt-36 pb-24 md:px-10 md:pt-44 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
           <p className="eyebrow mb-5 flex items-center gap-3 text-rose"><span className="h-px w-8 bg-current" aria-hidden />Ritual japonés para el cuero cabelludo</p>

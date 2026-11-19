@@ -87,8 +87,8 @@ export default async function ClientesPage({ searchParams }: PageProps<"/dashboa
                           {t}
                         </Badge>
                       ))}
-                      {c.allergies ? <Badge className="bg-[#fbecd6] text-[#7a4a10]">Alergia</Badge> : null}
-                      {c.noShowCount >= 2 ? <Badge className="bg-[#f1dce6] text-[#7c2754]">{c.noShowCount} no-shows</Badge> : null}
+                      {c.allergies ? <Badge className="bg-[#f3e6cf] text-[#7a4a10]">Alergia</Badge> : null}
+                      {c.noShowCount >= 2 ? <Badge className="bg-[#ece2d6] text-[#6b4f39]">{c.noShowCount} no-shows</Badge> : null}
                     </div>
                   </div>
                 </Card>

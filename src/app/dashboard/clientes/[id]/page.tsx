@@ -66,8 +66,8 @@ export default async function ClientePage({ params }: PageProps<"/dashboard/clie
             {c.tags.map((t) => (
               <Badge key={t}>{t}</Badge>
             ))}
-            {c.marketingOptIn ? <Badge className="bg-[#e3efe8] text-[#24603f]">Acepta marketing</Badge> : null}
-            {c.noShowCount ? <Badge className="bg-[#f1dce6] text-[#7c2754]">{c.noShowCount} no-shows</Badge> : null}
+            {c.marketingOptIn ? <Badge className="bg-[#e3e8df] text-[#3f5e4a]">Acepta marketing</Badge> : null}
+            {c.noShowCount ? <Badge className="bg-[#ece2d6] text-[#6b4f39]">{c.noShowCount} no-shows</Badge> : null}
           </div>
         </div>
         <dl className="grid grid-cols-3 gap-6 text-right">
@@ -112,7 +112,7 @@ export default async function ClientePage({ params }: PageProps<"/dashboard/clie
       </div>
 
       {c.allergies ? (
-        <p role="alert" className="mb-4 rounded-xl border border-[#e2b673] bg-[#fbecd6] px-4 py-3 text-sm text-[#5e3a0c]">
+        <p role="alert" className="mb-4 rounded-xl border border-[#e2b673] bg-[#f3e6cf] px-4 py-3 text-sm text-[#5e3a0c]">
           <strong>Alergias:</strong> {c.allergies}
         </p>
       ) : null}

@@ -256,7 +256,7 @@ export function CashDesk(p: Props) {
                             <span className="block truncate text-sm font-semibold">{b.customer.name ?? b.customer.phone}</span>
                             <span className="block truncate text-xs text-muted">{b.items.map((i) => `${i.name} · ${i.stylistName}`).join(" + ")}</span>
                           </span>
-                          {b.depositCents ? <Badge className="bg-[#d9f2ec] text-[#0b5f53]">Adelanto {formatMoney(b.depositCents)}</Badge> : null}
+                          {b.depositCents ? <Badge className="bg-[#e3e8df] text-[#3f5e4a]">Adelanto {formatMoney(b.depositCents)}</Badge> : null}
                           <span className="text-sm font-semibold tabular-nums">{formatMoney(b.items.reduce((a, i) => a + i.priceCents, 0))}</span>
                         </button>
                       </li>
@@ -462,12 +462,12 @@ export function CashDesk(p: Props) {
             </motion.span>
           </div>
           {dep ? (
-            <p className="mt-2 flex justify-between rounded-xl bg-[#d9f2ec] px-3 py-2 text-xs font-semibold text-[#0b5f53]">
+            <p className="mt-2 flex justify-between rounded-xl bg-[#e3e8df] px-3 py-2 text-xs font-semibold text-[#3f5e4a]">
               <span>Adelanto ya pagado</span>
               <span className="tabular-nums">−{formatMoney(Math.min(dep, total))}</span>
             </p>
           ) : null}
-          {error ? <p role="alert" className="mt-2 rounded-xl bg-[#fbdfe2] px-3 py-2 text-sm text-[#96202f]">{error}</p> : null}
+          {error ? <p role="alert" className="mt-2 rounded-xl bg-[#f2e2db] px-3 py-2 text-sm text-[#8f2f2a]">{error}</p> : null}
           <Button variant="rose" className="mt-3 h-12 w-full text-base" disabled={!cart.length || pending || !p.session} onClick={charge}>
             {pending ? "Cobrando…" : `Cobrar ${formatMoney(Math.max(0, total - dep))}`}
           </Button>
@@ -571,7 +571,7 @@ export function CashDesk(p: Props) {
                   <dl className="mt-4 space-y-2 text-sm">
                     <div className="flex justify-between"><dt className="text-muted">Esperado</dt><dd className="font-semibold tabular-nums">{formatMoney(closed.expected)}</dd></div>
                     <div className="flex justify-between"><dt className="text-muted">Contado</dt><dd className="font-semibold tabular-nums">{formatMoney(closed.counted)}</dd></div>
-                    <div className={cn("flex justify-between rounded-xl px-3 py-2 font-semibold", closed.counted === closed.expected ? "bg-[#d9f2ec] text-[#0b5f53]" : "bg-[#fbdfe2] text-[#96202f]")}><dt>Diferencia</dt><dd className="tabular-nums">{formatMoney(closed.counted - closed.expected)}</dd></div>
+                    <div className={cn("flex justify-between rounded-xl px-3 py-2 font-semibold", closed.counted === closed.expected ? "bg-[#e3e8df] text-[#3f5e4a]" : "bg-[#f2e2db] text-[#8f2f2a]")}><dt>Diferencia</dt><dd className="tabular-nums">{formatMoney(closed.counted - closed.expected)}</dd></div>
                   </dl>
                   <Button className="mt-4 w-full" onClick={() => { setClosing(false); setClosed(null); }}>Listo</Button>
                 </>

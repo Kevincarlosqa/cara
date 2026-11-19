@@ -20,7 +20,7 @@ export const viewport: Viewport = { themeColor: "#f6f1ea" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es-PE" className={`${display.variable} ${sans.variable} ${brand.variable} antialiased`}>
+    <html lang="es-PE" data-scroll-behavior="smooth" className={`${display.variable} ${sans.variable} ${brand.variable} antialiased`}>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

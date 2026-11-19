@@ -9,7 +9,7 @@ const ROLES = [
   { role: "owner", icon: Crown, title: "Dirección", text: "Todo el negocio: métricas, campañas y seguridad.", tone: "from-rose to-coral" },
   { role: "manager", icon: Building2, title: "Gerencia", text: "Operación diaria y resultados del Sanctuary.", tone: "from-violet to-rose" },
   { role: "reception", icon: ConciergeBell, title: "Recepción", text: "Agenda, caja, clientes y WhatsApp.", tone: "from-teal to-violet" },
-  { role: "stylist", icon: Sparkles, title: "Terapeuta", text: "Su agenda, sus clientes y sus comisiones.", tone: "from-coral to-[#d9a11f]" },
+  { role: "stylist", icon: Sparkles, title: "Terapeuta", text: "Su agenda, sus clientes y sus comisiones.", tone: "from-coral to-[#c39a52]" },
 ];
 
 export function DemoAccess() {

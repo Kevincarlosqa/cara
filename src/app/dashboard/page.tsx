@@ -40,7 +40,7 @@ export default async function DashboardHome({ searchParams }: PageProps<"/dashbo
     { label: "Reservas", value: k.bookings.toLocaleString("es-PE"), delta: <Delta current={k.bookings} previous={p.bookings} />, spark: sparkBookings, tone: "from-lilac/40 to-paper" },
     { label: "Ticket medio", value: formatMoney(k.avgTicketCents), delta: <Delta current={k.avgTicketCents} previous={p.avgTicketCents} />, tone: "from-peach/40 to-paper" },
     { label: "Ocupación", value: pct(k.occupancy), delta: <Delta current={k.occupancy} previous={p.occupancy} format="pts" />, tone: "from-butter/70 to-paper" },
-    { label: "No-show", value: pct(k.noShowRate), delta: <Delta current={k.noShowRate} previous={p.noShowRate} format="pts" invert />, tone: "from-[#d9f2ec] to-paper" },
+    { label: "No-show", value: pct(k.noShowRate), delta: <Delta current={k.noShowRate} previous={p.noShowRate} format="pts" invert />, tone: "from-[#e3e8df] to-paper" },
     { label: "Nuevos / recurrentes", value: `${k.newCustomers} / ${k.returningCustomers}`, delta: <Delta current={k.newCustomers} previous={p.newCustomers} />, tone: "from-sand to-paper" },
   ];
 
@@ -131,7 +131,7 @@ export default async function DashboardHome({ searchParams }: PageProps<"/dashbo
         ) : null}
         <Card>
           <CardTitle hint="Por ingresos">Servicios top</CardTitle>
-          {m.topServices.length ? <HBarChart data={m.topServices.map((s) => ({ name: s.name, value: s.revenue, extra: `${s.count} citas` }))} valueLabel="Ingresos" color="#149a8b" /> : <EmptyState title="Aún no hay servicios en este periodo" />}
+          {m.topServices.length ? <HBarChart data={m.topServices.map((s) => ({ name: s.name, value: s.revenue, extra: `${s.count} citas` }))} valueLabel="Ingresos" color="#6f8a72" /> : <EmptyState title="Aún no hay servicios en este periodo" />}
         </Card>
         <Card className={stylist || m.byBranch.length <= 1 ? "" : "xl:col-span-2"}>
           <CardTitle hint="Inicio de la cita, hora local: úsalo para repartir turnos y ofertas">Horas pico</CardTitle>

@@ -89,8 +89,6 @@ function HeroScene({ desktop }: { desktop: boolean }) {
   const rightY = useTransform(sy, (v) => v * 20);
   const centerX = useTransform(sx, (v) => v * 8);
   const counterX = useTransform(centerX, (v) => -v);
-  const lightX = useTransform(sx, (v) => `${v * 70}vw`);
-  const lightY = useTransform(sy, (v) => `${v * 70}vh`);
 
   const oval = desktop ? "ellipse(15% 33% at 50% 57%)" : "ellipse(36% 25% at 50% 58%)";
   const clipPath = useTransform(p, [0, 0.6], [oval, "ellipse(85% 85% at 50% 50%)"]);
@@ -142,8 +140,6 @@ function HeroScene({ desktop }: { desktop: boolean }) {
           <i style={{ width: "48vw", height: "48vw", left: "-10vw", top: "-16vw", color: "#e3cdb4", opacity: 0.8 }} />
           <i style={{ width: "44vw", height: "44vw", right: "-8vw", top: "-6vw", color: "#d8d2c6", opacity: 0.9, animationDelay: "-8s" }} />
         </div>
-        {/* Luz que sigue al cursor: un degradado fijo que solo se traslada (no se repinta). */}
-        <motion.div aria-hidden style={{ x: lightX, y: lightY }} className="pointer-events-none absolute top-1/2 left-1/2 h-[80vw] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(217,194,163,.5),rgba(217,194,163,.18)_55%,transparent)]" />
 
         {/* Cabecera editorial: aquí vive la frase, lejos de las fotos */}
         <motion.div style={{ opacity: introOpacity, y: introY }} className="pointer-events-none absolute inset-x-0 top-24 mx-auto flex max-w-[1400px] items-start justify-between gap-6 px-5 md:top-28 md:px-10">
@@ -151,11 +147,11 @@ function HeroScene({ desktop }: { desktop: boolean }) {
             <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 1, ease: SILK }} className="eyebrow text-ink-soft">
               Salud & belleza · Lima
             </motion.p>
-            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.15, duration: 1, ease: SILK }} className="mt-3 hidden max-w-[17rem] font-display text-[1.35rem] leading-snug text-ink-soft italic md:block">
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.15, duration: 1, ease: SILK }} className="mt-3 hidden max-w-[16rem] font-display text-[1.3rem] leading-snug text-ink-soft italic md:block">
               Un santuario para tu cabeza, tu rostro y tu cuerpo.
             </motion.p>
           </div>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1, duration: 1, ease: SILK }} className="flex flex-col items-end gap-5">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1, duration: 1, ease: SILK }} className="flex flex-col items-end">
             <p className="eyebrow hidden text-right leading-loose text-ink-soft md:block">
               01 Headspa
               <br />
@@ -163,12 +159,6 @@ function HeroScene({ desktop }: { desktop: boolean }) {
               <br />
               03 Corporales
             </p>
-            <span className="flex items-center gap-3">
-              <span className="eyebrow text-ink-soft">Desliza</span>
-              <span className="relative block h-10 w-px overflow-hidden bg-ink/15">
-                <motion.span className="absolute inset-x-0 top-0 h-1/2 bg-ink" animate={{ y: ["-100%", "200%"] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} />
-              </span>
-            </span>
           </motion.div>
         </motion.div>
 
@@ -197,9 +187,9 @@ function HeroScene({ desktop }: { desktop: boolean }) {
         </motion.div>
 
         {/* Logotipo en tinta (fuera del óvalo) */}
-        <motion.div style={{ y: wordY, scale: wordScale, opacity: wordOpacity }} className="absolute inset-x-0 top-[36%] flex -translate-y-1/2 justify-center md:top-[40%]">
+        <motion.div style={{ y: wordY, scale: wordScale, opacity: wordOpacity }} className="absolute inset-x-0 top-[36%] flex -translate-y-1/2 justify-center md:top-[calc(220px_+_min(21vw,30dvh)_*_0.4)]">
           <h1 aria-label="Cara Sanctuary">
-            <BigWord className="text-[27vw] text-ink md:text-[21vw]" />
+            <BigWord className="text-[27vw] text-ink md:text-[min(21vw,30dvh)]" />
           </h1>
         </motion.div>
 
@@ -207,13 +197,13 @@ function HeroScene({ desktop }: { desktop: boolean }) {
         <motion.div style={{ clipPath, x: centerX }} className="absolute inset-0">
           <motion.div initial={{ scale: 1.25, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2.2, ease: SILK }} className="absolute inset-0">
             <motion.div style={{ scale: imgScale }} className="absolute inset-0">
-              <Image src={unsplash(PHOTOS.heroCenter)} alt={PHOTOS.heroCenter.alt} fill priority sizes="100vw" className="grade object-cover object-[50%_30%]" />
+              <Image src={unsplash(PHOTOS.heroCenter)} alt={PHOTOS.heroCenter.alt} fill priority sizes="100vw" className="object-cover object-[50%_30%]" />
             </motion.div>
           </motion.div>
           <motion.div style={{ opacity: shade }} className="absolute inset-0 bg-linear-to-t from-plum via-plum/70 to-plum/10" />
           {/* Mismo logotipo, en claro: solo se ve dentro del óvalo */}
-          <motion.div style={{ y: wordY, scale: wordScale, opacity: wordOpacity, x: counterX }} className="absolute inset-x-0 top-[36%] flex -translate-y-1/2 justify-center md:top-[40%]" aria-hidden>
-            <BigWord className="text-[27vw] text-paper md:text-[21vw]" />
+          <motion.div style={{ y: wordY, scale: wordScale, opacity: wordOpacity, x: counterX }} className="absolute inset-x-0 top-[36%] flex -translate-y-1/2 justify-center md:top-[calc(220px_+_min(21vw,30dvh)_*_0.4)]" aria-hidden>
+            <BigWord className="text-[27vw] text-paper md:text-[min(21vw,30dvh)]" />
           </motion.div>
 
           {/* Texto al abrirse: cada línea sube desde su máscara, al ritmo del scroll */}
@@ -235,7 +225,7 @@ function HeroScene({ desktop }: { desktop: boolean }) {
           </div>
         </motion.div>
 
-        <Particles colors={["#b8976a", "#d9c2a3", "#fbf8f3", "#8a6a4f"]} count={28} glints={0.4} opacity={0.75} />
+        <Particles colors={["#b8976a", "#d9c2a3", "#fbf8f3", "#8a6a4f"]} count={18} glints={0.4} opacity={0.75} />
 
       </div>
     </section>

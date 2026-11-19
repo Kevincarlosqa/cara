@@ -3,7 +3,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useLenis } from "lenis/react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition, type ComponentProps, type MouseEvent, type ReactNode } from "react";
 import { Sparkle } from "@/components/brand/logo";
 
@@ -22,7 +21,6 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const reduced = useReducedMotion();
-  const lenis = useLenis();
   const [phase, setPhase] = useState<"idle" | "cover" | "reveal">("idle");
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -37,7 +35,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         return;
       }
       if (path === pathname && !href.includes("?")) {
-        lenis?.scrollTo(0);
+        window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
       target.current = path;
@@ -46,17 +44,16 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => startTransition(() => router.push(href)), 480);
     },
-    [lenis, pathname, reduced, router],
+    [pathname, reduced, router],
   );
 
   // Retira las baldosas cuando la ruta ya cambió y terminó de cargar.
   useEffect(() => {
     if (phase !== "cover" || isPending || target.current !== pathname) return;
-    lenis?.scrollTo(0, { immediate: true, force: true });
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
     const t = window.setTimeout(() => setPhase("reveal"), 120);
     return () => window.clearTimeout(t);
-  }, [phase, isPending, pathname, lenis]);
+  }, [phase, isPending, pathname]);
 
   useEffect(() => {
     if (phase !== "reveal") return;

@@ -109,7 +109,7 @@ export function ProposalPage() {
                     <m.icon className="h-6 w-6 text-rose" aria-hidden />
                     <h3 className="mt-4 font-display text-3xl leading-tight">{m.title}</h3>
                     <p className="mt-2 flex-1 text-sm text-ink-soft">{m.text}</p>
-                    <p className={`mt-4 inline-flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${ready ? "bg-[#d9f2ec] text-[#0b5f53]" : "bg-butter text-[#6f4a06]"}`}>
+                    <p className={`mt-4 inline-flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${ready ? "bg-[#e3e8df] text-[#3f5e4a]" : "bg-butter text-[#6f4a06]"}`}>
                       {ready ? <Check className="h-3 w-3" aria-hidden /> : null} {m.state}
                     </p>
                   </div>

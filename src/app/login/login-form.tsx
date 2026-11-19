@@ -21,7 +21,7 @@ export function LoginForm({ next, demo }: { next?: string; demo: boolean }) {
         </Field>
       ) : null}
       {state.error ? (
-        <p role="alert" className="rounded-xl bg-[#fbdfe2] px-3 py-2 text-sm text-[#96202f]">
+        <p role="alert" className="rounded-xl bg-[#f2e2db] px-3 py-2 text-sm text-[#8f2f2a]">
           {state.error}
         </p>
       ) : null}

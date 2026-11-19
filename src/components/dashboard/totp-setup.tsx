@@ -15,7 +15,7 @@ export function TotpSetup({ enabled }: { enabled: boolean }) {
   if (enabled) {
     return (
       <div className="space-y-3">
-        <Badge className="bg-[#d9f2ec] text-[#0b5f53]">Activa en tu cuenta</Badge>
+        <Badge className="bg-[#e3e8df] text-[#3f5e4a]">Activa en tu cuenta</Badge>
         <p className="text-sm text-muted">Para desactivarla, escribe un código de tu app.</p>
         <div className="flex gap-2">
           <input value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" placeholder="000 000" aria-label="Código de 6 dígitos" className={cn(inputClass, "tabular-nums")} />

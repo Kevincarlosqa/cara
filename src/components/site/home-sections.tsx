@@ -116,7 +116,7 @@ export function Manifesto({ services }: { services: number }) {
         <i style={{ width: 640, height: 640, left: "-12%", top: "-22%", color: "#6b4f39" }} />
         <i style={{ width: 540, height: 540, right: "-10%", bottom: "-22%", color: "#5b4a3e", animationDelay: "-10s" }} />
       </div>
-      <Particles colors={["#d9c2a3", "#b8976a", "#efe4cf", "#fbf8f3"]} count={50} glints={0.35} opacity={0.75} />
+      <Particles colors={["#d9c2a3", "#b8976a", "#efe4cf", "#fbf8f3"]} count={26} glints={0.35} opacity={0.75} />
       <div className="relative mx-auto max-w-[1400px] px-5 py-28 md:px-10 md:py-44">
         <Eyebrow className="text-peach">Cara: «rostro», en español</Eyebrow>
         <ScrollFillText
@@ -494,7 +494,6 @@ export function Gallery() {
         <GalleryColumn y={fast} photos={[PHOTOS.citrus, PHOTOS.backMassage]} className="mt-20 md:mt-32" />
         <GalleryColumn y={slow} photos={[PHOTOS.hairWash, PHOTOS.mask]} className="hidden md:flex" />
       </div>
-      <Particles colors={["#b8976a", "#d9c2a3", "#8a6a4f"]} count={26} glints={0.45} opacity={0.7} />
     </section>
   );
 }
@@ -778,7 +777,6 @@ export function FinalCta() {
             </motion.div>
           ))}
         </div>
-        <Particles colors={["#fbf8f3", "#b8976a", "#8a6a4f"]} count={30} glints={0.45} opacity={0.85} />
         <div className="relative">
           <Sparkle className="mx-auto mb-6 h-6 w-6 animate-spin-slow text-rose-deep" />
           <h2 className="font-display text-[clamp(3.4rem,10vw,9.5rem)] leading-[0.88] font-light">Te toca <em>a ti</em></h2>

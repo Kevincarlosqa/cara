@@ -166,7 +166,7 @@ export default async function AgendaPage({ searchParams }: PageProps<"/dashboard
     <>
       {header}
       {closures.length ? (
-        <p className="mb-4 rounded-xl bg-[#fbecd6] px-4 py-2 text-sm text-[#5e3a0c]">Cierre: {closures.map((c) => c.reason).join(" · ")}</p>
+        <p className="mb-4 rounded-xl bg-[#f3e6cf] px-4 py-2 text-sm text-[#5e3a0c]">Cierre: {closures.map((c) => c.reason).join(" · ")}</p>
       ) : null}
       {columns.length === 0 ? (
         <EmptyState title="Nadie trabaja este día en esta sede">Cambia de fecha o revisa los horarios en Configuración.</EmptyState>

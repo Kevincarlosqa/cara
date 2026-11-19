@@ -194,7 +194,7 @@ export function Sidebar({ nav, user, branches, selected, canPickAll, unread }: P
                       aria-current={active ? "page" : undefined}
                       className={cn("relative flex items-center gap-3 rounded-xl px-3 py-[0.3rem] text-[13.5px] transition-colors", active ? "font-semibold text-ink" : "text-paper/85 hover:bg-paper/10 hover:text-paper")}
                     >
-                      {active ? <motion.span layoutId={`${idPrefix}-active`} className="absolute inset-0 rounded-xl bg-linear-to-r from-peach via-[#ffd3c2] to-blush" transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }} /> : null}
+                      {active ? <motion.span layoutId={`${idPrefix}-active`} className="absolute inset-0 rounded-xl bg-linear-to-r from-peach via-[#e9d6c2] to-blush" transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }} /> : null}
                       <Icon className="relative h-4 w-4" aria-hidden />
                       <span className="relative flex-1">{item.label}</span>
                       {item.icon === "chat" && unread > 0 ? <span className={cn("relative rounded-full px-1.5 text-[11px] font-semibold", active ? "bg-ink text-paper" : "bg-rose text-white")}>{unread}</span> : null}
@@ -220,7 +220,7 @@ export function Sidebar({ nav, user, branches, selected, canPickAll, unread }: P
     </div>
   );
 
-  const shell = "bg-plum bg-[radial-gradient(120%_60%_at_0%_0%,#6b2559_0%,transparent_60%),radial-gradient(90%_40%_at_100%_100%,#7a2e6b_0%,transparent_65%)]";
+  const shell = "bg-plum bg-[radial-gradient(120%_60%_at_0%_0%,#3a2c24_0%,transparent_60%),radial-gradient(90%_40%_at_100%_100%,#4a3a2e_0%,transparent_65%)]";
 
   return (
     <>

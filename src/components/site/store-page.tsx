@@ -8,7 +8,6 @@ import type { LandingData } from "@/lib/landing";
 import { cn, formatMoney } from "@/lib/utils";
 import { waLink } from "./icons";
 import { FadeUp, RevealLines, Tilt } from "./motion-kit";
-import { Particles } from "./particles";
 
 const BRAND_TONES = ["from-sand to-blush", "from-lilac/70 to-sand", "from-butter to-peach/50", "from-blush to-lilac/60", "from-peach/50 to-sand", "from-linen to-butter", "from-[#dfe3da] to-sand"];
 const GIFTS = [
@@ -29,7 +28,6 @@ export function StorePage({ products, whatsapp, demo }: { products: LandingData[
           <i style={{ width: 620, height: 620, right: "-10%", top: "-30%", color: "#8a6a4f" }} />
           <i style={{ width: 480, height: 480, left: "-10%", bottom: "-30%", color: "#5b4a3e", animationDelay: "-9s" }} />
         </div>
-        <Particles colors={["#d9c2a3", "#b8976a", "#fbf8f3"]} count={40} glints={0.45} opacity={0.8} />
         <div className="relative mx-auto max-w-[1400px]">
           <p className="eyebrow mb-5 flex items-center gap-2 text-peach"><Gift className="h-4 w-4" aria-hidden /> Gift cards</p>
           <h1 id="gift-title" className="sr-only">Gift cards</h1>
