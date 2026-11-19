@@ -242,6 +242,19 @@ html.lenis, html.lenis body { height: auto; }
   .ripples { display: none; }
 }
 
+/* Carril horizontal de rituales: en escritorio lo mueve el scroll vertical. Donde el navegador
+   soporta animaciones ligadas al scroll (Chrome, Edge), corre en el compositor: va pegado al dedo.
+   La animación CSS manda sobre el transform en línea del respaldo en JavaScript. */
+@keyframes lane-move { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(var(--lane-shift, 0px), 0, 0); } }
+@keyframes lane-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .lane-track { view-timeline: --lane block; }
+    .lane-move { animation: lane-move linear both; animation-timeline: --lane; animation-range: contain 0% contain 100%; }
+    .lane-bar { animation: lane-bar linear both; animation-timeline: --lane; animation-range: contain 0% contain 100%; }
+  }
+}
+
 /* Barras que crecen al aparecer. */
 .grow-x { transform-origin: left; animation: grow-x 1s var(--ease-silk) both; }
 @keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }

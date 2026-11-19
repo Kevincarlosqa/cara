@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useInView, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react";
-import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Check, Clock, MapPin, Plus } from "lucide-react";
 import { LogoMark, Sparkle } from "@/components/brand/logo";
 import { formatPostDate, type Post } from "@/content/blog";
@@ -326,9 +326,12 @@ export function HeadspaRitual({ cta = true }: { cta?: boolean }) {
 /* ─── Rituales destacados (carril horizontal) ─────────────────────────── */
 
 export function Rituals({ services }: { services: Service[] }) {
+  const section = useRef<HTMLElement>(null);
   const lane = useRef<HTMLUListElement>(null);
-  const progress = useMotionValue(0);
+  const reduced = useReducedMotion();
   const drag = useRef({ active: false, moved: false, x: 0, left: 0 });
+  const shift = useMotionValue(0);
+  const bar = useMotionValue(0);
   // Cada tarjeta toma una foto de su categoría, sin repetir mientras haya opciones.
   const pools: Partial<Record<Service["category"], Photo[]>> = { RITUAL: [PHOTOS.massageOil, PHOTOS.hotStones, PHOTOS.citrus], HEADSPA: [PHOTOS.hairWash, PHOTOS.faceMassage], FACIAL: [PHOTOS.facial, PHOTOS.facialMask, PHOTOS.mask], BODY: [PHOTOS.spaStill, PHOTOS.backMassage], MASSAGE: [PHOTOS.backMassage, PHOTOS.hotStones], COUPLE: [PHOTOS.hotStones] };
   const used: Record<string, number> = {};
@@ -337,89 +340,135 @@ export function Rituals({ services }: { services: Service[] }) {
     const n = (used[s.category] = (used[s.category] ?? -1) + 1);
     return pool[n % pool.length]!;
   });
+
+  // Escritorio: el scroll vertical mueve el carril. En Chrome/Edge lo hace el propio navegador con
+  // `animation-timeline` (ver .lane-* en globals.css), fuera del hilo principal. En el resto, un
+  // resorte suaviza el recorrido para que no vaya a saltos.
+  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 110, damping: 26, mass: 0.35 });
+  const x = useTransform(() => smooth.get() * shift.get());
+  useMotionValueEvent(smooth, "change", (v) => {
+    if (window.matchMedia("(min-width: 1024px)").matches) bar.set(v);
+  });
+
+  // Distancia que debe recorrer el carril: su ancho total menos la pantalla.
+  useEffect(() => {
+    const el = lane.current;
+    const sec = section.current;
+    if (!el || !sec) return;
+    const update = () => {
+      const d = -Math.max(0, el.scrollWidth - window.innerWidth);
+      shift.set(d);
+      sec.style.setProperty("--lane-shift", `${d}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [shift]);
+
   const step = (dir: 1 | -1) => {
     const el = lane.current;
+    const sec = section.current;
     const card = el?.querySelector("li");
-    if (!el || !card) return;
-    el.scrollBy({ left: dir * (card.getBoundingClientRect().width + 20), behavior: "smooth" });
+    if (!el || !sec || !card) return;
+    if (window.matchMedia("(min-width: 1024px)").matches && !reduced) {
+      // En escritorio el carril avanza con el scroll de la página: se baja lo que equivale a una tarjeta.
+      const travel = sec.offsetHeight - window.innerHeight;
+      const per = travel / Math.max(1, (el.scrollWidth - window.innerWidth) / (card.getBoundingClientRect().width + 20));
+      window.scrollBy({ top: dir * per, behavior: "smooth" });
+    } else {
+      el.scrollBy({ left: dir * (card.getBoundingClientRect().width + 20), behavior: "smooth" });
+    }
   };
+
   return (
-    <section aria-labelledby="rituales" className="relative overflow-hidden bg-sand/70 py-24 md:py-32">
-      <div className="mx-auto mb-10 flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-6 px-5 md:px-10">
-        <div>
-          <Eyebrow>Los favoritos de la casa</Eyebrow>
-          <motion.h2 id="rituales" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.6vw,5.6rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></motion.h2>
+    <section ref={section} aria-labelledby="rituales" className={cn("lane-track relative bg-sand/70", !reduced && "lg:h-[300vh]")}>
+      <div className={cn("overflow-hidden py-24 md:py-32", !reduced && "lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-center lg:py-0")}>
+        <div className="mx-auto mb-10 flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-6 px-5 md:px-10">
+          <div>
+            <Eyebrow>Los favoritos de la casa</Eyebrow>
+            <motion.h2 id="rituales" initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10% 0px" }} transition={{ duration: 1.2, ease: EASE }} className="font-display text-[clamp(2.6rem,5.2vw,5.2rem)] leading-[0.92] font-light">Rituales para <em className="text-gradient pr-2">perder la noción del tiempo</em></motion.h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => step(-1)} aria-label="Anterior" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4" aria-hidden /></button>
+            <button type="button" onClick={() => step(1)} aria-label="Siguiente" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4 rotate-180" aria-hidden /></button>
+            <TLink href="/servicios" className="ml-3 inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Toda la carta <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={() => step(-1)} aria-label="Anterior" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4" aria-hidden /></button>
-          <button type="button" onClick={() => step(1)} aria-label="Siguiente" className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/15 transition-colors hover:bg-ink hover:text-paper"><ArrowLeft className="h-4 w-4 rotate-180" aria-hidden /></button>
-          <TLink href="/servicios" className="ml-3 inline-flex items-center gap-1 text-sm font-semibold underline-offset-4 hover:underline">Toda la carta <ArrowUpRight className="h-4 w-4" aria-hidden /></TLink>
-        </div>
-      </div>
-      <ul
-        ref={lane}
-        className="scrollbar-none flex cursor-grab snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto overscroll-x-contain px-5 pb-2 select-none active:cursor-grabbing md:scroll-px-10 md:px-10"
-        onScroll={(e) => {
-          const el = e.currentTarget;
-          progress.set(el.scrollWidth > el.clientWidth ? el.scrollLeft / (el.scrollWidth - el.clientWidth) : 0);
-        }}
-        onPointerDown={(e) => {
-          if (e.pointerType !== "mouse" || !lane.current) return;
-          drag.current = { active: true, moved: false, x: e.clientX, left: lane.current.scrollLeft };
-        }}
-        onPointerMove={(e) => {
-          const d = drag.current;
-          const el = lane.current;
-          if (!d.active || !el) return;
-          const dx = e.clientX - d.x;
-          if (!d.moved && Math.abs(dx) > 6) {
-            d.moved = true;
-            el.style.scrollSnapType = "none";
-          }
-          if (d.moved) el.scrollLeft = d.left - dx;
-        }}
-        onPointerUp={() => {
-          const el = lane.current;
-          drag.current.active = false;
-          if (el) el.style.scrollSnapType = "";
-        }}
-        onPointerLeave={() => {
-          const el = lane.current;
-          drag.current.active = false;
-          if (el) el.style.scrollSnapType = "";
-        }}
-        onClickCapture={(e) => {
-          // Si fue un arrastre, no se abre la tarjeta.
-          if (drag.current.moved) {
-            e.preventDefault();
-            e.stopPropagation();
-            drag.current.moved = false;
-          }
-        }}
-      >
-        {services.map((s, i) => (
-          <Reveal as="li" key={s.id} delay={Math.min(i, 3) * 0.08} y={60} className="w-[78vw] shrink-0 snap-start sm:w-[46vw] lg:w-[29vw] xl:w-[25vw]">
-            <TLink href={`/reservar?servicio=${s.id}`} className="group block" data-cursor="Reservar" draggable={false}>
-              <div className="relative h-[54vh] max-h-[560px] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
-                <Image src={unsplash(photos[i]!)} alt={photos[i]!.alt} fill draggable={false} sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 29vw, 78vw" className="grade object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-105" />
-                <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide">{CATEGORY_LABELS[s.category]}</span>
-              </div>
-              <div className="mt-5 flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="font-display text-3xl leading-tight font-light transition-colors group-hover:text-rose">{s.name}</h3>
-                  <p className="mt-1 line-clamp-2 max-w-xs text-sm text-muted">{s.description}</p>
+        <motion.ul
+          ref={lane}
+          style={reduced ? undefined : { x }}
+          className={cn(
+            "scrollbar-none flex gap-5 px-5 pb-2 select-none md:px-10",
+            // Móvil y tablet: carrusel nativo deslizable con snap.
+            "max-lg:!transform-none cursor-grab snap-x snap-mandatory scroll-px-5 overflow-x-auto overscroll-x-contain active:cursor-grabbing md:scroll-px-10",
+            // Escritorio: el carril completo se traslada con el scroll.
+            !reduced && "lane-move lg:w-max lg:cursor-auto lg:snap-none lg:overflow-visible lg:will-change-transform",
+          )}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            if (el.scrollWidth > el.clientWidth) bar.set(el.scrollLeft / (el.scrollWidth - el.clientWidth));
+          }}
+          onPointerDown={(e) => {
+            if (e.pointerType !== "mouse" || !lane.current || lane.current.scrollWidth <= lane.current.clientWidth) return;
+            drag.current = { active: true, moved: false, x: e.clientX, left: lane.current.scrollLeft };
+          }}
+          onPointerMove={(e) => {
+            const d = drag.current;
+            const el = lane.current;
+            if (!d.active || !el) return;
+            const dx = e.clientX - d.x;
+            if (!d.moved && Math.abs(dx) > 6) {
+              d.moved = true;
+              el.style.scrollSnapType = "none";
+            }
+            if (d.moved) el.scrollLeft = d.left - dx;
+          }}
+          onPointerUp={() => {
+            drag.current.active = false;
+            if (lane.current) lane.current.style.scrollSnapType = "";
+          }}
+          onPointerLeave={() => {
+            drag.current.active = false;
+            if (lane.current) lane.current.style.scrollSnapType = "";
+          }}
+          onClickCapture={(e) => {
+            if (drag.current.moved) {
+              e.preventDefault();
+              e.stopPropagation();
+              drag.current.moved = false;
+            }
+          }}
+        >
+          {services.map((s, i) => (
+            <Reveal as="li" key={s.id} delay={Math.min(i, 3) * 0.08} y={60} className="w-[78vw] shrink-0 snap-start sm:w-[46vw] lg:w-[29vw] xl:w-[25vw]">
+              <TLink href={`/reservar?servicio=${s.id}`} className="group block" data-cursor="Reservar" draggable={false}>
+                <div className="relative h-[54vh] max-h-[560px] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
+                  <Image src={unsplash(photos[i]!)} alt={photos[i]!.alt} fill draggable={false} sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 29vw, 78vw" className="grade object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-105" />
+                  <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-paper/90 px-3 py-1 text-[11px] font-semibold tracking-wide">{CATEGORY_LABELS[s.category]}</span>
                 </div>
-                <p className="shrink-0 text-right text-sm font-semibold tabular-nums">{formatMoney(s.basePriceCents)}<span className="block text-xs font-normal text-muted">{hours(s.durationMin)}</span></p>
-              </div>
-            </TLink>
-          </Reveal>
-        ))}
-        <li aria-hidden className="w-px shrink-0" />
-      </ul>
-      {/* Avance del carril */}
-      <div className="mx-auto mt-10 max-w-[1400px] px-5 md:px-10">
-        <div className="relative h-px w-full bg-ink/15">
-          <motion.span style={{ scaleX: progress }} className="absolute inset-0 origin-left bg-linear-to-r from-rose-deep via-gold to-rose" />
+                <div className="mt-5 flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-display text-3xl leading-tight font-light transition-colors group-hover:text-rose">{s.name}</h3>
+                    <p className="mt-1 line-clamp-2 max-w-xs text-sm text-muted">{s.description}</p>
+                  </div>
+                  <p className="shrink-0 text-right text-sm font-semibold tabular-nums">{formatMoney(s.basePriceCents)}<span className="block text-xs font-normal text-muted">{hours(s.durationMin)}</span></p>
+                </div>
+              </TLink>
+            </Reveal>
+          ))}
+          <li aria-hidden className="w-px shrink-0" />
+        </motion.ul>
+        {/* Avance del carril */}
+        <div className="mx-auto mt-8 w-full max-w-[1400px] px-5 md:px-10">
+          <div className="relative h-px w-full bg-ink/15">
+            <motion.span style={{ scaleX: bar }} className="lane-bar absolute inset-0 origin-left bg-linear-to-r from-rose-deep via-gold to-rose" />
+          </div>
         </div>
       </div>
     </section>
