@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import {
   Banknote, BarChart3, Bot, CalendarDays, Crown, Gauge, LineChart, ListChecks, LogOut, Megaphone, Menu, MessageCircle, Package, Search, Settings, ShieldCheck, Star, Users, UsersRound, X,
 } from "lucide-react";
-import { LogoMark, Wordmark } from "@/components/brand/logo";
+import { Wordmark } from "@/components/brand/logo";
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/login/actions";
 import { setBranch } from "@/app/dashboard/actions";
@@ -141,7 +141,7 @@ export function Sidebar({ nav, user, branches, selected, canPickAll, unread }: P
   const content = (idPrefix: string) => (
     <div className="flex h-full flex-col gap-3 p-3.5">
       <Link href="/" className="flex items-center gap-2 px-2 pt-1 text-[13px] text-paper" aria-label="Ir a la web de Cara">
-        <Wordmark withMark />
+        <Wordmark />
       </Link>
 
       <div className="px-1">
@@ -225,8 +225,7 @@ export function Sidebar({ nav, user, branches, selected, canPickAll, unread }: P
   return (
     <>
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-ivory/90 px-4 py-3 backdrop-blur lg:hidden">
-        <Link href="/dashboard" className="flex items-center gap-2 text-[13px]" aria-label="Inicio del panel">
-          <LogoMark className="h-6 w-6 text-rose" title="" />
+        <Link href="/dashboard" className="text-[13px]" aria-label="Inicio del panel">
           <Wordmark />
         </Link>
         <button onClick={() => setOpen(true)} className="rounded-lg p-2 hover:bg-sand" aria-label="Abrir menú" aria-expanded={open}>

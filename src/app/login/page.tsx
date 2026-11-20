@@ -24,7 +24,7 @@ export default function LoginPage(props: PageProps<"/login">) {
         <div className="absolute inset-0 bg-linear-to-t from-plum via-plum/30 to-plum/40" />
         <LogoMark className="absolute -right-32 -bottom-32 h-[40rem] w-[40rem] animate-spin-slow text-paper/10" title="" />
         <div className="relative flex h-full flex-col justify-between p-12">
-          <Link href="/" className="text-lg" aria-label="Ir a la web"><Wordmark withMark /></Link>
+          <Link href="/" className="text-lg" aria-label="Ir a la web"><Wordmark /></Link>
           <div>
             <p className="font-display text-7xl leading-[0.92] font-light">
               Tu negocio,
