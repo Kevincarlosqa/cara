@@ -92,7 +92,9 @@ function HeroScene({ desktop }: { desktop: boolean }) {
 
   const oval = desktop ? "ellipse(15% 33% at 50% 57%)" : "ellipse(36% 25% at 50% 58%)";
   const clipPath = useTransform(p, [0, 0.6], [oval, "ellipse(85% 85% at 50% 50%)"]);
-  const imgScale = useTransform(p, [0, 0.8], [1.14, 1]);
+  // En escritorio la foto llena todo el ancho y la cara queda enorme: se parte reducida para que el rostro
+  // entero quepa en el óvalo, y crece hasta 1 antes de que el óvalo se abra lo bastante para ver sus bordes.
+  const imgScale = useTransform(p, desktop ? [0, 0.25] : [0, 0.8], desktop ? [0.62, 1] : [1.14, 1]);
   const wordY = useTransform(p, [0, 0.45], ["0%", "-45%"]);
   const wordScale = useTransform(p, [0, 0.45], [1, 1.12]);
   const wordOpacity = useTransform(p, [0.05, 0.4], [1, 0]);
@@ -196,8 +198,9 @@ function HeroScene({ desktop }: { desktop: boolean }) {
         {/* El óvalo */}
         <motion.div style={{ clipPath, x: centerX }} className="absolute inset-0">
           <motion.div initial={{ scale: 1.25, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 2.2, ease: SILK }} className="absolute inset-0">
-            <motion.div style={{ scale: imgScale }} className="absolute inset-0">
-              <Image src={unsplash(PHOTOS.heroCenter)} alt={PHOTOS.heroCenter.alt} fill priority sizes="100vw" className="object-cover object-[50%_30%]" />
+            {/* En escritorio la caja es más alta (1/0,62) para que, reducida, siga cubriendo toda la pantalla */}
+            <motion.div style={{ scale: imgScale }} className={desktop ? "absolute inset-x-0 -inset-y-[31%]" : "absolute inset-0"}>
+              <Image src={unsplash(PHOTOS.heroCenter)} alt={PHOTOS.heroCenter.alt} fill priority sizes="100vw" className={desktop ? "object-cover object-[50%_48%]" : "object-cover object-[50%_30%]"} />
             </motion.div>
           </motion.div>
           <motion.div style={{ opacity: shade }} className="absolute inset-0 bg-linear-to-t from-plum via-plum/70 to-plum/10" />
